@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\FirebaseAuthentication;
+use App\Http\Middleware\JsonAPI;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -57,5 +59,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'api.json' => JsonAPI::class,
+        'auth.firebase' => FirebaseAuthentication::class
     ];
 }
