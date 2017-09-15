@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->integer('organization_id')->unsigned()->nullable();
             $table->timestamps();
-//            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('SET NULL');
         });
     }
 
