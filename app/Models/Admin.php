@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +18,6 @@ class Admin extends Model
 
     public function organization()
     {
-        return $this->belongsTo('organizations');
+        return $this->belongsTo(Organization::class);
     }
 }
