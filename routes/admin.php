@@ -1,3 +1,6 @@
 <?php
-
-use Illuminate\Http\Request;
+Route::middleware('auth', function() {
+    Route::get('/', function() {
+        return view('welcome');
+    });
+});
