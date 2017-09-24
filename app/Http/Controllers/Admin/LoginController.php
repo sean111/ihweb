@@ -1,20 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sean
- * Date: 9/20/17
- * Time: 2:05 PM
- */
 
 namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController
+class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
     protected $redirectTo = '/admin';
+    protected $loginPath = '/admin/login';
 
     protected function guard()
     {
@@ -23,7 +19,7 @@ class LoginController
 
     public function showLogin()
     {
-        //Show the admin login form
+        return view('admin-login');
     }
 
     public function __construct()
