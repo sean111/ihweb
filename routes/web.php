@@ -14,5 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
 Route::get('/login', 'SecurityController@showLogin')->name('login');
+Route::post('/check_login', 'SecurityController@checkLogin')->name('check_login');
+Route::get('/logout', 'SecurityController@logout')->name('logout');

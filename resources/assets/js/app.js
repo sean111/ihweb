@@ -19,15 +19,6 @@ firebase.initializeApp({
     messagingSenderId: "599946771340"
 });
 
-$('#login').on('click', function () {
-    console.log('pre firebase');
-    firebase.auth().signInWithEmailAndPassword($('#email').val(), $('#password').val())
-        .then(function () {
-            console.log('Test')
-        })
-        .catch(error => console.error({'code': error.code, 'message': error.message}));
-});
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -38,4 +29,23 @@ Vue.component('example', require('./components/Example.vue'));
 
 const app = new Vue({
     el: '#app'
+});
+
+$(function() {
+    $('#login').on('click', function () {
+        firebase.auth().signInWithEmailAndPassword($('#email').val(), $('#password').val())
+            .catch(error => console.error({'code': error.code, 'message': error.message}));
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                console.debug(user.He);
+                axios.post('/check_login', {
+                    token: user.He
+                })
+                    .then(() => window.location = '/')
+                    .catch(error => console.error(error));
+            } else {
+                console.log('User signed out');
+            }
+        });
+    });
 });
