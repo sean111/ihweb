@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 window.firebase = require('firebase');
-
 window.Vue = require('vue');
 
 firebase.initializeApp({
