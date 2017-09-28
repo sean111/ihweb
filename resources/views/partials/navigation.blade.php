@@ -12,7 +12,7 @@
 
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="{{ route('home') }}">Home</a>
             </li>
         </ul>
 
@@ -32,6 +32,9 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                        @if(Auth::user()->role != 'user')
+                            <a href="{{ route('admin.home') }}" class="dropdown-item">Admin</a>
+                        @endif
                     </div>
                 </li>
             @endif

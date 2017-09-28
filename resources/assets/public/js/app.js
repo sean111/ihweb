@@ -8,6 +8,8 @@
 require('./bootstrap');
 window.firebase = require('firebase');
 window.Vue = require('vue');
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue);
 
 firebase.initializeApp({
     apiKey: "AIzaSyAcakBCFW_yg7DIorj_Icgj056BLkVXtyM",
