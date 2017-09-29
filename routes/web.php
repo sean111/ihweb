@@ -19,5 +19,5 @@ Route::post('/check_login', 'SecurityController@checkLogin')->name('check_login'
 Route::get('/logout', 'SecurityController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], function() {
-    Route::get('/')->name('admin.home');
+    Route::get('/', 'Admin\DefaultController@index')->name('admin.home');
 });

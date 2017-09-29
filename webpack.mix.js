@@ -17,8 +17,6 @@ let components = {
 };
 mix.autoload(components)
     .js('resources/assets/public/js/app.js', 'public/js')
-    .sass('resources/assets/public/sass/app.scss', 'public/css');
-
-mix.autoload(components)
     .js('resources/assets/admin/js/admin.js', 'public/js')
+    .sass('resources/assets/public/sass/app.scss', 'public/css')
     .sass('resources/assets/admin/sass/admin.scss', 'public/css');
