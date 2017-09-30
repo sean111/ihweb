@@ -94,7 +94,7 @@
             <ol class="breadcrumb">
                 @foreach($breadcrumb as $item)
                     <li class="breadcrumb-item @if(empty($item['route'])) {{ 'active' }} @endif">
-                        @if(!empty($item['route'])) <a href="{{ $item['route'] ?? '#' }}"> @endif
+                        @if(!empty($item['route'])) <a href="{{ route($item['route']) }}"> @endif
                             @if($item['icon']) <i class="fa fa-{{$item['icon']}}"></i> @endif{{ $item['name'] }}
                         @if(!empty($item['route'])) </a> @endif
                     </li>
