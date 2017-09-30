@@ -20,4 +20,10 @@ Route::get('/logout', 'SecurityController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], function() {
     Route::get('/', 'Admin\DefaultController@index')->name('admin.home');
+    //Users
+    Route::get('/users', 'Admin\UsersController@index')->name('admin.users');
+    Route::group(['prefix' => 'user'], function() {
+        Route::get('new', 'Admin\UsersController@edit')->name('admin.user.new');
+        Route::get('edit/{id}', 'Admin\UsersController@edit')->name('admin.user.edit');
+    });
 });

@@ -55,12 +55,50 @@
                     <li class="nav-title">
                         Menu
                     </li>
+                    @if(!empty($organizations))
+                    <li class="nav-item">
+                        <select id="orgChanger" class="form-control">
+                            @foreach($organization as $org)
+                                <option value="{{ $org->id }}">{{ $org->name }}</option>
+                            @endforeach
+                        </select>
+                    </li>
+                    @endif
+                    <li class="nav-item">
+                        <a href="{{ route('admin.home') }}" class="nav-link"><i class="fa fa-tachometer"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.users') }}" class="nav-link"><i class="fa fa-users"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa fa-briefcase"></i> Reporting</a>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a href="#" class="nav-link nav-dropdown-toggle"><i class="fa fa-newspaper-o"></i> Quizes</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link"><i class="fa fa-edit"></i>Manage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa fa-building"></i> Admins</a>
+                    </li>
                 </ul>
             </nav>
         </div>
         <main class="main">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                @foreach($breadcrumb as $item)
+                    <li class="breadcrumb-item @if(empty($item['route'])) {{ 'active' }} @endif">
+                        @if(!empty($item['route'])) <a href="{{ $item['route'] ?? '#' }}"> @endif
+                            @if($item['icon']) <i class="fa fa-{{$item['icon']}}"></i> @endif{{ $item['name'] }}
+                        @if(!empty($item['route'])) </a> @endif
+                    </li>
+                @endforeach
             </ol>
             <div class="container-fluid" id="vue-app">
                 @yield('content')
