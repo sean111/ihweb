@@ -28,4 +28,13 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::post('save', 'Admin\UsersController@save')->name('admin.user.save');
         Route::get('delete/{id}', 'Admin\UsersController@delete')->name('admin.user.delete');
     });
+
+    //Organizations
+    Route::get('organizations', 'Admin\OrganizationController@index')->name('admin.orgs');
+    Route::group(['prefix' => 'organization'], function() {
+        Route::get('new', 'Admin\OrganizationController@edit')->name('admin.org.new');
+        Route::get('edit/{id}', 'Admin\OrganizationController@edit')->name('admin.org.edit');
+        Route::post('save', 'Admin\OrganizationController@save')->name('admin.org.save');
+        Route::get('delete/{id}', 'Admin\OrganizationController@delete')->name('admin.org.delete');
+    });
 });

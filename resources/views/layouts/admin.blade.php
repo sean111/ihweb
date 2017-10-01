@@ -68,7 +68,7 @@
                         <a href="{{ route('admin.home') }}" class="nav-link"><i class="fa fa-tachometer"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa fa-building"></i> Organizations</a>
+                        <a href="{{ route('admin.orgs') }}" class="nav-link"><i class="fa fa-building"></i> Organizations</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('admin.users') }}" class="nav-link"><i class="fa fa-user"></i> Users</a>
