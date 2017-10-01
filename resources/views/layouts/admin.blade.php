@@ -68,7 +68,10 @@
                         <a href="{{ route('admin.home') }}" class="nav-link"><i class="fa fa-tachometer"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.users') }}" class="nav-link"><i class="fa fa-users"></i> Users</a>
+                        <a href="#" class="nav-link"><i class="fa fa-building"></i> Organizations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.users') }}" class="nav-link"><i class="fa fa-user"></i> Users</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link"><i class="fa fa-briefcase"></i> Reporting</a>
@@ -85,7 +88,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa fa-building"></i> Admins</a>
+                        <a href="#" class="nav-link"><i class="fa fa-group"></i> Admins</a>
                     </li>
                 </ul>
             </nav>
@@ -101,6 +104,7 @@
                 @endforeach
             </ol>
             <div class="container-fluid" id="vue-app">
+                {!! get_alert() !!}
                 @yield('content')
             </div>
         </main>

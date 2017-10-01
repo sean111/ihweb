@@ -36,6 +36,14 @@ class UsersController extends Controller
 
     public function save(Request $request)
     {
-
+        try {
+            $user = User::findOrNew($request->get('id'));
+            $user->update($request->all());
+            $user->save();
+            set_alert('success', 'User has been saved');
+        } catch (\Throwable $e) {
+            set_alert('error', $e->getMessage());
+        }
+        return redirect(route('admin.users'));
     }
 }
