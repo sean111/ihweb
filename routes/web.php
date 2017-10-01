@@ -26,5 +26,6 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::get('new', 'Admin\UsersController@edit')->name('admin.user.new');
         Route::get('edit/{id}', 'Admin\UsersController@edit')->name('admin.user.edit');
         Route::post('save', 'Admin\UsersController@save')->name('admin.user.save');
+        Route::get('delete/{id}', 'Admin\UsersController@delete')->name('admin.user.delete');
     });
 });

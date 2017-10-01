@@ -38,9 +38,26 @@ class UsersController extends Controller
     {
         try {
             $user = User::findOrNew($request->get('id'));
-            $user->update($request->all());
+            $user->first_name = $request->get('first_name');
+            $user->last_name = $request->get('last_name');
+            $user->email = $request->get('email');
+            $user->firebase_uid = $request->get('firebase_uid');
             $user->save();
             set_alert('success', 'User has been saved');
+        } catch (\Throwable $e) {
+            dump($request->all());
+            dd($e);
+            set_alert('error', $e->getMessage());
+        }
+        return redirect(route('admin.users'));
+    }
+
+    public function delete(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            set_alert('success', 'User has been deleted');
         } catch (\Throwable $e) {
             set_alert('error', $e->getMessage());
         }
