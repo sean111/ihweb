@@ -17,7 +17,7 @@ class UsersController extends Controller
     public function index()
     {
         $this->addBreadcrumb('Users', null, 'users');
-        $users = User::all();
+        $users = User::where('organization_id', '=', getDefaultOrg());
         return $this->view('admin.users.index', ['users' => $users]);
     }
 
@@ -43,11 +43,9 @@ class UsersController extends Controller
             $user->email = $request->get('email');
             $user->firebase_uid = $request->get('firebase_uid');
             $user->save();
-            set_alert('success', 'User has been saved');
+            setAlert('success', 'User has been saved');
         } catch (\Throwable $e) {
-            dump($request->all());
-            dd($e);
-            set_alert('error', $e->getMessage());
+            setAlert('error', $e->getMessage());
         }
         return redirect(route('admin.users'));
     }
@@ -57,9 +55,9 @@ class UsersController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
-            set_alert('success', 'User has been deleted');
+            setAlert('success', 'User has been deleted');
         } catch (\Throwable $e) {
-            set_alert('error', $e->getMessage());
+            setAlert('error', $e->getMessage());
         }
         return redirect(route('admin.users'));
     }

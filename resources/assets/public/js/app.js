@@ -34,19 +34,41 @@ const app = new Vue({
 
 $(function() {
     $('#login').on('click', function () {
-        firebase.auth().signInWithEmailAndPassword($('#email').val(), $('#password').val())
-            .catch(error => console.error({'code': error.code, 'message': error.message}));
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                console.debug(user.He);
+        let email = $('#email').val().trim();
+        let password = $('#password').val().trim();
+        console.log({ 'email': email, 'password': password});
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(data => {
+                console.log(data.He);
                 axios.post('/check_login', {
-                    token: user.He
+                    token: data.He
                 })
-                    .then(() => window.location = '/')
+                    .then(() => {
+                        window.location = '/';
+                    })
                     .catch(error => console.error(error));
-            } else {
-                console.log('User signed out');
-            }
-        });
+            })
+            .catch(error => console.error({'code': error.code, 'message': error.message}));
+        // firebase.auth().onAuthStateChanged(function(user) {
+        //     console.log(user);
+        //     if (user) {
+        //         firebase.auth().currentUser.getToken(true)
+        //             .then(token => {
+        //                 console.log(token)
+        //             })
+        //             .catch(error => {
+        //                 console.error('In get new token');
+        //                 console.error(error);
+        //             });
+        //         console.debug(user.He);
+        //         // axios.post('/check_login', {
+        //         //     token: user.He
+        //         // })
+        //         //     .then(() => window.location = '/')
+        //         //     .catch(error => console.error(error));
+        //     } else {
+        //         console.log('User signed out');
+        //     }
+        // });
     });
 });

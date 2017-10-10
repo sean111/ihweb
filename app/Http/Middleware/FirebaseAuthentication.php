@@ -23,10 +23,11 @@ class FirebaseAuthentication
         $errorMessage = 'Not authorized';
         $errorCode = 401;
         try {
-            $authToken = $request->headers->get('Authorization');
+            $authToken = str_replace('Bearer', null, $request->headers->get('Authorization'));
             if ($authToken === null) {
                 throw new \InvalidArgumentException('No authentication token found');
             }
+            Log::info('[Firebase Auth] => ' . $authToken);
             $serviceAccount = ServiceAccount::fromJsonFile(config_path() . '/firebase.json');
             $firebase = (new Factory)->withServiceAccount($serviceAccount)->create();
             $tokenHandler = $firebase->getTokenHandler();
@@ -36,9 +37,9 @@ class FirebaseAuthentication
             if (empty($user)) {
                 throw new \InvalidArgumentException('No user found');
             }
-            Auth::login($user);
+            Auth::loginUsingId($user->id);
         } catch (\Throwable $e) {
-            Log::error($e->getMessage());
+            Log::error('[Firebase Auth] => ' . $e->getMessage());
             return response()->json($errorMessage, $errorCode);
         }
         return $next($request);

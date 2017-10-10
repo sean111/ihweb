@@ -37,4 +37,10 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::post('save', 'Admin\OrganizationController@save')->name('admin.org.save');
         Route::get('delete/{id}', 'Admin\OrganizationController@delete')->name('admin.org.delete');
     });
+
+    //Admins
+    Route::get('admins', 'Admin\AdminController@index')->name('admin.admins');
+    Route::group(['prefix' => 'admin'], function() {
+
+    });
 });

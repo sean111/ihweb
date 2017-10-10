@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('content')
+    @include('partials.orgswitcher')
     <div class="card">
         <div class="card-header">
             Users

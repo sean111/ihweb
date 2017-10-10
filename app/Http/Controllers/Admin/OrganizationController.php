@@ -38,9 +38,9 @@ class OrganizationController extends Controller
             $org->email = $request->get('email');
             $org->domain = $request->get('domain');
             $org->save();
-            set_alert('success', 'Organization has been saved');
+            setAlert('success', 'Organization has been saved');
         } catch (\Throwable $e) {
-            set_alert('error', $e->getMessage());
+            setAlert('error', $e->getMessage());
         }
         return redirect(route('admin.orgs'));
     }
@@ -50,9 +50,9 @@ class OrganizationController extends Controller
         try {
             $org = Organization::findOrFail($id);
             $org->delete();
-            set_alert('success', 'Organization deleted');
+            setAlert('success', 'Organization deleted');
         } catch (\Throwable $e) {
-            set_alert('error', $e->getMessage());
+            setAlert('error', $e->getMessage());
         }
         return redirect(route('admin.orgs'));
     }

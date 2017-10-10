@@ -43043,23 +43043,42 @@ var app = new Vue({
 
 $(function () {
     $('#login').on('click', function () {
-        firebase.auth().signInWithEmailAndPassword($('#email').val(), $('#password').val()).catch(function (error) {
+        var email = $('#email').val().trim();
+        var password = $('#password').val().trim();
+        console.log({ 'email': email, 'password': password });
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function (data) {
+            console.log(data.He);
+            axios.post('/check_login', {
+                token: data.He
+            }).then(function () {
+                window.location = '/';
+            }).catch(function (error) {
+                return console.error(error);
+            });
+        }).catch(function (error) {
             return console.error({ 'code': error.code, 'message': error.message });
         });
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                console.debug(user.He);
-                axios.post('/check_login', {
-                    token: user.He
-                }).then(function () {
-                    return window.location = '/';
-                }).catch(function (error) {
-                    return console.error(error);
-                });
-            } else {
-                console.log('User signed out');
-            }
-        });
+        // firebase.auth().onAuthStateChanged(function(user) {
+        //     console.log(user);
+        //     if (user) {
+        //         firebase.auth().currentUser.getToken(true)
+        //             .then(token => {
+        //                 console.log(token)
+        //             })
+        //             .catch(error => {
+        //                 console.error('In get new token');
+        //                 console.error(error);
+        //             });
+        //         console.debug(user.He);
+        //         // axios.post('/check_login', {
+        //         //     token: user.He
+        //         // })
+        //         //     .then(() => window.location = '/')
+        //         //     .catch(error => console.error(error));
+        //     } else {
+        //         console.log('User signed out');
+        //     }
+        // });
     });
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(22)))

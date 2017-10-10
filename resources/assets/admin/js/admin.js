@@ -153,11 +153,13 @@ function capitalizeFirstLetter(string) {
 }
 
 function init(url) {
-
     /* ---------- Tooltip ---------- */
     $('[rel="tooltip"],[data-rel="tooltip"]').tooltip({"placement":"bottom",delay: { show: 400, hide: 200 }});
-
     /* ---------- Popover ---------- */
     $('[rel="popover"],[data-rel="popover"],[data-toggle="popover"]').popover();
-
 }
+
+$('#defaultorg').on('change', () => {
+    let value = $('#defaultorg :selected').val();
+    console.log(value);
+});

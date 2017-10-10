@@ -22,14 +22,4 @@ class Controller extends BaseController
         $this->templateVars['breadcrumb'][] = ['name' => $name, 'route' => $route, 'icon' => $icon];
         return $this;
     }
-
-    public function addFlash(string $type, string $message)
-    {
-        try {
-            \Session::flash('message', ['type' => $type, 'message' => $message]);
-            return true;
-        } catch (\Throwable $e) {
-            return false;
-        }
-    }
 }

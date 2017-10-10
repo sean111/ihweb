@@ -12,3 +12,9 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(['middleware' => 'auth.firebase'], function() {
+    Route::group(['prefix' => 'user'], function() {
+        Route::get('/', 'API\UserController@index')->name('api.user');
+    });
+});

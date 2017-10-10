@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\ServiceAccount;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class SecurityController extends Controller
 {
@@ -29,6 +30,7 @@ class SecurityController extends Controller
     {
         try {
             $authToken = $request->input('token');
+            Log::info('[Auth Login] => ' . $authToken);
             if (empty($authToken)) {
                 throw new \InvalidArgumentException('No token found');
             }
@@ -37,11 +39,12 @@ class SecurityController extends Controller
             $tokenHandler = $firebase->getTokenHandler();
             $token = $tokenHandler->verifyIdToken($authToken);
             $userId = $token->getClaim('user_id');
+            Log::info('[Auth Login] => ' . $userId);
             $user = User::where('firebase_uid', $userId)->firstOrFail();
-            Auth::guard('web')->loginUsingId($user->id, true);
+            Auth::guard('web')->loginUsingId($user->id);
             return response()->json(['success' => true, 'data' => Auth::user()]);
         } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 401);
         }
     }
 

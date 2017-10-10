@@ -85,10 +85,13 @@
                             <li class="nav-item">
                                 <a href="#" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
                             </li>
+                            <li class="lav-item">
+                                <a href="#" class="nav-link"><i class="fa fa-circle-o-notch"></i> Categories</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa fa-group"></i> Admins</a>
+                        <a href="{{ route('admin.admins') }}" class="nav-link"><i class="fa fa-group"></i> Admins</a>
                     </li>
                 </ul>
             </nav>
@@ -104,7 +107,7 @@
                 @endforeach
             </ol>
             <div class="container-fluid" id="vue-app">
-                {!! get_alert() !!}
+                {!! getAlert() !!}
                 @yield('content')
             </div>
         </main>

@@ -331,13 +331,16 @@ function capitalizeFirstLetter(string) {
 }
 
 function init(url) {
-
     /* ---------- Tooltip ---------- */
     $('[rel="tooltip"],[data-rel="tooltip"]').tooltip({ "placement": "bottom", delay: { show: 400, hide: 200 } });
-
     /* ---------- Popover ---------- */
     $('[rel="popover"],[data-rel="popover"],[data-toggle="popover"]').popover();
 }
+
+$('#defaultorg').on('change', function () {
+    var value = $('#defaultorg :selected').val();
+    console.log(value);
+});
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(22)))
 
 /***/ }),
