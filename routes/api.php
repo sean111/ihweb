@@ -16,5 +16,6 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth.firebase'], function() {
     Route::group(['prefix' => 'user'], function() {
         Route::get('/', 'API\UserController@index')->name('api.user');
+        Route::post('update', 'API\UserController@update')->name('api.user.update');
     });
 });
