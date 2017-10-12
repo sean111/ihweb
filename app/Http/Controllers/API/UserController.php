@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -17,6 +18,20 @@ class UserController extends Controller
     {
         Log::info(Auth::user());
         return new UserResource(Auth::user());
+    }
+
+    /**
+     * @param int $userId
+     * @return UserResource|\Illuminate\Http\JsonResponse
+     */
+    public function get(int $userId)
+    {
+        try {
+            $user = User::find($userId);
+            return new UserResource($user);
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**

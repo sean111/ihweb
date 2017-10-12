@@ -16,12 +16,14 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth.firebase'], function() {
     Route::group(['prefix' => 'user'], function() {
         Route::get('/', 'API\UserController@index')->name('api.user');
+        Route::get('/{userId}', 'API\UserController@get')->name('api.user.get');
         Route::post('update', 'API\UserController@update')->name('api.user.update');
     });
     Route::group(['prefix' => 'organization'], function() {
         Route::get('/', 'API\OrganizationController@index')->name('api.organization');
         Route::get('id/{id}', 'API\OrganizationController@getById')->name('api.organization.byid');
         Route::get('domain/{domain}', 'API\OrganizationController@getByDomain')->name('api.organization.bydomain');
-
+        Route::get('/categories', 'API\OrganizationController@categories')->name('api.org.categories');
+        Route::get('{orgId}/categories', 'API\OrganizationController@categoriesById')->name('api.org.categories.id');
     });
 });
