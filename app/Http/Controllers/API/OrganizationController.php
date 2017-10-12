@@ -96,9 +96,8 @@ class OrganizationController extends Controller
      */
     private function getCategories(int $orgId)
     {
-        dd($orgId);
         try {
-            $cats = Category::where('orgaization_id', '=', $orgId)->get();
+            $cats = Category::where('organization_id', '=', $orgId)->get();
             return new CategoryResource($cats);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
