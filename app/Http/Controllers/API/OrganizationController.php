@@ -60,6 +60,9 @@ class OrganizationController extends Controller
         }
     }
 
+    /**
+     * @return GroupResource|\Illuminate\Http\JsonResponse
+     */
     public function groups()
     {
         try {
@@ -70,16 +73,27 @@ class OrganizationController extends Controller
         }
     }
 
+    /**
+     * @return CategoryResource|\Illuminate\Http\JsonResponse
+     */
     public function categories()
     {
         return $this->getCategories(Auth::user()->organization_id);
     }
 
+    /**
+     * @param int $orgId
+     * @return CategoryResource|\Illuminate\Http\JsonResponse
+     */
     public function categoriesById(int $orgId)
     {
         return $this->getCategories($orgId);
     }
 
+    /**
+     * @param int $orgId
+     * @return CategoryResource|\Illuminate\Http\JsonResponse
+     */
     private function getCategories(int $orgId)
     {
         dd($orgId);
