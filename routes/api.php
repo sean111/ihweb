@@ -25,5 +25,7 @@ Route::group(['middleware' => 'auth.firebase'], function() {
         Route::get('domain/{domain}', 'API\OrganizationController@getByDomain')->name('api.organization.bydomain');
         Route::get('/categories', 'API\OrganizationController@categories')->name('api.org.categories');
         Route::get('{orgId}/categories', 'API\OrganizationController@categoriesById')->name('api.org.categories.id');
+        Route::get('/groups', 'API\OrganizationController@groups')->name('api.org.groups');
+        Route::get('{orgId}/groups', 'API\OrganizationController@groupsById')->name('api.org.groups.id');
     });
 });

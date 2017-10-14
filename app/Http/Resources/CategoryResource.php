@@ -2,18 +2,19 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\Resource;
+use function foo\func;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CategoryResource extends Resource
+class CategoryResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return $this->collection;
     }
 }

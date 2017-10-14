@@ -50,7 +50,7 @@ class OrganizationController extends Controller
     public function getByDomain(string $domain)
     {
         try {
-            $org = Organization::where('domain', '=', $domain)->get();
+            $org = Organization::where('domain', '=', $domain)->first();
             if ($org === null) {
                 return response()->json(['success' => false], 500);
             }
@@ -65,8 +65,26 @@ class OrganizationController extends Controller
      */
     public function groups()
     {
+        return $this->getGroups(Auth::user()->organization_id);
+    }
+
+    /**
+     * @param int $orgId
+     * @return GroupResource|\Illuminate\Http\JsonResponse
+     */
+    public function groupsById(int $orgId)
+    {
+        return $this->getGroups($orgId);
+    }
+
+    /**
+     * @param int $id
+     * @return GroupResource|\Illuminate\Http\JsonResponse
+     */
+    public function getGroups(int $id)
+    {
         try {
-            $groups = Group::where('orgaization_id', '=', Auth::user()->organization_id)->get();
+            $groups = Group::where('orgaization_id', '=', $id)->get();
             return new GroupResource($groups);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
