@@ -25,7 +25,12 @@ Route::group(['middleware' => 'auth.firebase'], function() {
         Route::get('domain/{domain}', 'API\OrganizationController@getByDomain')->name('api.organization.bydomain');
         Route::get('/categories', 'API\OrganizationController@categories')->name('api.org.categories');
         Route::get('{orgId}/categories', 'API\OrganizationController@categoriesById')->name('api.org.categories.id');
-        Route::get('/groups', 'API\OrganizationController@groups')->name('api.org.groups');
-        Route::get('{orgId}/groups', 'API\OrganizationController@groupsById')->name('api.org.groups.id');
+        Route::get('/groups', 'API\OrganizationController@groups')->name('api.org.categories');
+        Route::get('{orgId}/groups', 'API\OrganizationController@groupsById')->name('api.org.categories.id');
+    });
+    Route::group(['prefix' => 'question'], function() {
+        Route::get('{catId}', 'API\QuestionController@getAll')->name('api.question.all');
+        Route::get('{catId}/{start}/{count}', 'API\QuestionController@getRange')->name('api.question.range');
+        Route::get('{catId}/rand', 'API\QuestionController@getRandom')->name('api.question.rand');
     });
 });
