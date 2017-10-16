@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email')->unique();
+            $table->string('email', 254)->unique();
             $table->enum('role', ['user', 'admin', 'client_admin', 'dev'])->default('user');
             $table->integer('organization_id')->unsigned()->nullable();
-            $table->string('firebase_uid')->unique();
+            $table->string('firebase_uid', 254)->unique();
             $table->rememberToken();
             $table->timestamps();
         });

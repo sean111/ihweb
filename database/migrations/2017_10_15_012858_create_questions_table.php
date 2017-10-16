@@ -22,6 +22,7 @@ class CreateQuestionsTable extends Migration
             $table->string('incorrect_feedback');
             $table->enum('difficulty', ['easy', 'medium', 'hard']);
             $table->string('resource');
+            $table->enum('type', ['mc', 'yn']);
             $table->integer('organization_id')->unsigned()->nullable();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('SET NULL');
             $table->timestamps();
