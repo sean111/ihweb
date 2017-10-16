@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionCategory extends Migration
+class CreateCategoryQuestion extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateQuestionCategory extends Migration
      */
     public function up()
     {
-        Schema::create('question_category', function (Blueprint $table) {
+        Schema::create('category_question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id')->unsigned();
             $table->integer('category_id')->unsigned();

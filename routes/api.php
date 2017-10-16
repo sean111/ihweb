@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth.firebase'], function() {
     });
     Route::group(['prefix' => 'question'], function() {
         Route::get('{catId}', 'API\QuestionController@getAll')->name('api.question.all');
-        Route::get('{catId}/{start}/{count}', 'API\QuestionController@getRange')->name('api.question.range');
         Route::get('{catId}/rand', 'API\QuestionController@getRandom')->name('api.question.rand');
+        Route::get('{catId}/{count}/{start?}', 'API\QuestionController@getRange')->name('api.question.range');
     });
 });
