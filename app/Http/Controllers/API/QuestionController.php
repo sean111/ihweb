@@ -46,4 +46,12 @@ class QuestionController extends Controller
         }
         return $questions->limit($count)->get();
     }
+
+    public function getDifficulty(int $catId, string $diff)
+    {
+        $questions = Question::whereHas('categories', function($q) use ($catId) {
+            $q->where('category_id', $catId);
+        })->where('difficulty', '=', $diff)->get();
+        return $questions;
+    }
 }
