@@ -29,15 +29,16 @@ class SecurityController extends Controller
     public function checkLogin(Request $request)
     {
         try {
+            $apiKey = 'AIzaSyAcakBCFW_yg7DIorj_Icgj056BLkVXtyM';
             $authToken = $request->input('token');
             Log::info('[Auth Login] => ' . $authToken);
             if (empty($authToken)) {
                 throw new \InvalidArgumentException('No token found');
             }
             $serviceAccount = ServiceAccount::fromJsonFile(config_path() . '/firebase.json');
-            $firebase = (new Factory)->withServiceAccount($serviceAccount)->create();
-            $tokenHandler = $firebase->getTokenHandler();
-            $token = $tokenHandler->verifyIdToken($authToken);
+            $firebase = (new Factory)->withServiceAccountAndApiKey($serviceAccount, $apiKey)->create();
+            $auth = $firebase->getAuth();
+            $token = $auth->verifyIdToken($authToken);
             $userId = $token->getClaim('user_id');
             Log::info('[Auth Login] => ' . $userId);
             $user = User::where('firebase_uid', $userId)->firstOrFail();
