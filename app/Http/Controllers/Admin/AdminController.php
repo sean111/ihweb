@@ -18,4 +18,16 @@ class AdminController extends Controller
         $admins = User::where('role', '!=', 'user')->get();
         return $this->view('admin.admins.index', ['admins' => $admins]);
     }
+
+    public function edit(int $id = 0)
+    {
+        if ($id > 0) {
+            $admin = User::find($id);
+        } else {
+            $admin = new User;
+        }
+        $orgs = getOrgs();
+        \Debugbar::info($orgs);
+        return $this->view('admin.admins.edit', ['admin' => $admin, 'orgs' => $orgs]);
+    }
 }

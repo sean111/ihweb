@@ -23,7 +23,7 @@
                             <th>{{ $admin->email }}</th>
                             <th>{{ ucfirst($admin->role) }}</th>
                             <th>
-                                <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                <a href="{{ route('admin.admins.edit', ['id' => $admin->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Danger</a>
                             </th>
                         </tr>

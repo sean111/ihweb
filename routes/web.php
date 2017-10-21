@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
     //Admins
     Route::get('admins', 'Admin\AdminController@index')->name('admin.admins');
     Route::group(['prefix' => 'admin'], function() {
-
+        Route::get('edit/{id}', 'Admin\AdminController@edit')->name('admin.admins.edit');
+        Route::get('new', 'Admin\AdminController@edit')->name('admin.admins.new');
     });
 });

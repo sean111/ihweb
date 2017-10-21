@@ -8,6 +8,7 @@
 require('./bootstrap');
 window.firebase = require('firebase');
 window.Vue = require('vue');
+window.toastr = require('toastr');
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 
@@ -32,6 +33,15 @@ const app = new Vue({
     el: '#app'
 });
 
+toastr.options = {
+    "positionClass": "toast-top-full-width",
+    "preventDuplicates": true,
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
+
 $(function() {
     $('#login').on('click', function () {
         let email = $('#email').val().trim();
@@ -46,29 +56,8 @@ $(function() {
                     .then(() => {
                         window.location = '/';
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => { console.error(error); toastr.error(error.message); });
             })
-            .catch(error => console.error({'code': error.code, 'message': error.message}));
-        // firebase.auth().onAuthStateChanged(function(user) {
-        //     console.log(user);
-        //     if (user) {
-        //         firebase.auth().currentUser.getToken(true)
-        //             .then(token => {
-        //                 console.log(token)
-        //             })
-        //             .catch(error => {
-        //                 console.error('In get new token');
-        //                 console.error(error);
-        //             });
-        //         console.debug(user.He);
-        //         // axios.post('/check_login', {
-        //         //     token: user.He
-        //         // })
-        //         //     .then(() => window.location = '/')
-        //         //     .catch(error => console.error(error));
-        //     } else {
-        //         console.log('User signed out');
-        //     }
-        // });
+            .catch(error =>{ console.error({'code': error.code, 'message': error.message}); toastr.error(error.message); });
     });
 });
