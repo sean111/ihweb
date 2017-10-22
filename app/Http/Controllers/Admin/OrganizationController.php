@@ -37,6 +37,9 @@ class OrganizationController extends Controller
             $org->name = $request->get('name');
             $org->email = $request->get('email');
             $org->domain = $request->get('domain');
+            $org->primary_color = $request->get('primary_color');
+            $org->secondary_color = $request->get('secondary_color');
+            $org->tertiary_color = $request->get('tertiary_color');
             $org->save();
             setAlert('success', 'Organization has been saved');
         } catch (\Throwable $e) {

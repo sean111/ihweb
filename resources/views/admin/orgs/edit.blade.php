@@ -23,6 +23,18 @@
                     <input type="text" class="form-control" name="domain" value="{{ $org->domain ?? '' }}">
                 </div>
                 <div class="form-group">
+                    <label for="primary_color" class="form-control-label">Primary Color</label>
+                    <input type="text" class="form-control" name="primary_color" value="{{ $org->primary_color }}">
+                </div>
+                <div class="form-group">
+                    <label for="secondary_color" class="form-control-label">Secondary Color</label>
+                    <input type="text" class="form-control" name="secondary_color" value="{{ $org->secondary_color }}">
+                </div>
+                <div class="form-group">
+                    <label for="tertiary_color" class="form-control-label">Terirary Color</label>
+                    <input type="text" class="form-control" name="tertiary_color" value="{{ $org->tertiary_color }}">
+                </div>
+                <div class="form-group">
                     <input type="hidden" name="id" value="{{ $id }}">
                     {{ csrf_field() }}
                     <button class="btn btn-success">Save</button>
