@@ -26,6 +26,8 @@
         "vue-router": "2.7.0"
     },
     "dependencies": {
+        "bootstrap-colorpicker": "^2.5.2",
+        "chart.js": "^2.7.0",
         "toastr": "^2.1.2"
     }
 }

@@ -16,8 +16,10 @@ class UsersController extends Controller
 
     public function index()
     {
+        $org = getDefaultOrg();
+        \Debugbar::info($org);
         $this->addBreadcrumb('Users', null, 'users');
-        $users = User::where('organization_id', '=', getDefaultOrg());
+        $users = User::where('organization_id', '=', $org->id)->where('role', '=', 'user')->get();
         return $this->view('admin.users.index', ['users' => $users]);
     }
 

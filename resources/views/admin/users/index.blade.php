@@ -17,7 +17,6 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Firebase UID</th>
-                        <th>Organization</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -29,7 +28,6 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ ucfirst($user->role) }}</td>
                             <td>{{ $user->firebase_uid }}</td>
-                            <th>{{ $user->organization()->name ?? '&nbsp;' }}</th>
                             <td>
                                 <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="{{ route('admin.user.delete', ['id' => $user->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Danger</a>

@@ -1,4 +1,5 @@
 require('bootstrap');
+require('bootstrap-colorpicker');
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -121,6 +122,15 @@ $(document).ready(function($){
     /* ---------- Disable moving to top ---------- */
     $('a[href="#"][data-top!=true]').click(function(e){
         e.preventDefault();
+    });
+
+    var colorPickerTemplate = '<div class="colorpicker dropdown-menu">' +
+        '<div class="colorpicker-saturation"><i><b></b></i></div>' +
+        '<div class="colorpicker-hue"><i></i></div>' +
+        '<div class="colorpicker-color"><div /></div>' +
+        '<div class="colorpicker-selectors"></div>' + '</div>';
+    $('.colorpicker-component').colorpicker({
+        template: colorPickerTemplate
     });
 
 });

@@ -2681,764 +2681,6 @@ module.exports = exports['default'];
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-var utils = __webpack_require__(2);
-var normalizeHeaderName = __webpack_require__(47);
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(25);
-  } else if (typeof process !== 'undefined') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(25);
-  }
-  return adapter;
-}
-
-var defaults = {
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Content-Type');
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-      return JSON.stringify(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
-    }
-    return data;
-  }],
-
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  }
-};
-
-defaults.headers = {
-  common: {
-    'Accept': 'application/json, text/plain, */*'
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*! @license Firebase v4.4.0
-Build: rev-380121f
-Terms: https://firebase.google.com/terms/ */
-
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.attachDummyErrorHandler = exports.Deferred = exports.PromiseImpl = undefined;
-
-var _globalScope = __webpack_require__(78);
-
-var PromiseImpl = exports.PromiseImpl = _globalScope.globalScope.Promise || __webpack_require__(123);
-/**
- * A deferred promise implementation.
- */
-/**
-* Copyright 2017 Google Inc.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-var Deferred = /** @class */function () {
-    /** @constructor */
-    function Deferred() {
-        var self = this;
-        this.resolve = null;
-        this.reject = null;
-        this.promise = new PromiseImpl(function (resolve, reject) {
-            self.resolve = resolve;
-            self.reject = reject;
-        });
-    }
-    /**
-     * Our API internals are not promiseified and cannot because our callback APIs have subtle expectations around
-     * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
-     * and returns a node-style callback which will resolve or reject the Deferred's promise.
-     * @param {((?function(?(Error)): (?|undefined))| (?function(?(Error),?=): (?|undefined)))=} opt_nodeCallback
-     * @return {!function(?(Error), ?=)}
-     */
-    Deferred.prototype.wrapCallback = function (opt_nodeCallback) {
-        var self = this;
-        /**
-           * @param {?Error} error
-           * @param {?=} opt_value
-           */
-        function meta(error, opt_value) {
-            if (error) {
-                self.reject(error);
-            } else {
-                self.resolve(opt_value);
-            }
-            if (typeof opt_nodeCallback === 'function') {
-                attachDummyErrorHandler(self.promise);
-                // Some of our callbacks don't expect a value and our own tests
-                // assert that the parameter length is 1
-                if (opt_nodeCallback.length === 1) {
-                    opt_nodeCallback(error);
-                } else {
-                    opt_nodeCallback(error, opt_value);
-                }
-            }
-        }
-        return meta;
-    };
-    return Deferred;
-}();
-exports.Deferred = Deferred;
-/**
- * Chrome (and maybe other browsers) report an Error in the console if you reject a promise
- * and nobody handles the error. This is normally a good thing, but this will confuse devs who
- * never intended to use promises in the first place. So in some cases (in particular, if the
- * developer attached a callback), we should attach a dummy resolver to the promise to suppress
- * this error.
- *
- * Note: We can't do this all the time, since it breaks the Promise spec (though in the obscure
- * 3.3.3 section related to upgrading non-compliant promises).
- * @param {!firebase.Promise} promise
- */
-
-var attachDummyErrorHandler = exports.attachDummyErrorHandler = function attachDummyErrorHandler(promise) {
-    promise.catch(function () {});
-};
-//# sourceMappingURL=promise.js.map
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*! @license Firebase v4.4.0
-Build: rev-380121f
-Terms: https://firebase.google.com/terms/ */
-
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.errorPrefix = errorPrefix;
-/**
-* Copyright 2017 Google Inc.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-/**
- * Check to make sure the appropriate number of arguments are provided for a public function.
- * Throws an error if it fails.
- *
- * @param {!string} fnName The function name
- * @param {!number} minCount The minimum number of arguments to allow for the function call
- * @param {!number} maxCount The maximum number of argument to allow for the function call
- * @param {!number} argCount The actual number of arguments provided.
- */
-var validateArgCount = exports.validateArgCount = function validateArgCount(fnName, minCount, maxCount, argCount) {
-    var argError;
-    if (argCount < minCount) {
-        argError = 'at least ' + minCount;
-    } else if (argCount > maxCount) {
-        argError = maxCount === 0 ? 'none' : 'no more than ' + maxCount;
-    }
-    if (argError) {
-        var error = fnName + ' failed: Was called with ' + argCount + (argCount === 1 ? ' argument.' : ' arguments.') + ' Expects ' + argError + '.';
-        throw new Error(error);
-    }
-};
-/**
- * Generates a string to prefix an error message about failed argument validation
- *
- * @param {!string} fnName The function name
- * @param {!number} argumentNumber The index of the argument
- * @param {boolean} optional Whether or not the argument is optional
- * @return {!string} The prefix to add to the error thrown for validation.
- */
-function errorPrefix(fnName, argumentNumber, optional) {
-    var argName = '';
-    switch (argumentNumber) {
-        case 1:
-            argName = optional ? 'first' : 'First';
-            break;
-        case 2:
-            argName = optional ? 'second' : 'Second';
-            break;
-        case 3:
-            argName = optional ? 'third' : 'Third';
-            break;
-        case 4:
-            argName = optional ? 'fourth' : 'Fourth';
-            break;
-        default:
-            throw new Error('errorPrefix called with argumentNumber > 4.  Need to update it?');
-    }
-    var error = fnName + ' failed: ';
-    error += argName + ' argument ';
-    return error;
-}
-/**
- * @param {!string} fnName
- * @param {!number} argumentNumber
- * @param {!string} namespace
- * @param {boolean} optional
- */
-var validateNamespace = exports.validateNamespace = function validateNamespace(fnName, argumentNumber, namespace, optional) {
-    if (optional && !namespace) return;
-    if (typeof namespace !== 'string') {
-        //TODO: I should do more validation here. We only allow certain chars in namespaces.
-        throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid firebase namespace.');
-    }
-};
-var validateCallback = exports.validateCallback = function validateCallback(fnName, argumentNumber, callback, optional) {
-    if (optional && !callback) return;
-    if (typeof callback !== 'function') throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid function.');
-};
-var validateContextObject = exports.validateContextObject = function validateContextObject(fnName, argumentNumber, context, optional) {
-    if (optional && !context) return;
-    if ((typeof context === 'undefined' ? 'undefined' : _typeof(context)) !== 'object' || context === null) throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid context object.');
-};
-//# sourceMappingURL=validation.js.map
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*! @license Firebase v4.4.0
-Build: rev-380121f
-Terms: https://firebase.google.com/terms/ */
-
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.validateObjectContainsKey = exports.validateObject = exports.validateString = exports.validateBoolean = exports.validateCredential = exports.validateUrl = exports.validateWritablePath = exports.validateRootPathString = exports.validatePathString = exports.validateKey = exports.validateEventType = exports.validatePriority = exports.validateFirebaseMergeDataArg = exports.validateFirebaseMergePaths = exports.validateFirebaseData = exports.validateFirebaseDataArg = exports.isValidPriority = exports.isValidRootPathString = exports.isValidPathString = exports.isValidKey = exports.MAX_LEAF_SIZE_ = exports.INVALID_PATH_REGEX_ = exports.INVALID_KEY_REGEX_ = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-                                                                                                                                                                                                                                                                              * Copyright 2017 Google Inc.
-                                                                                                                                                                                                                                                                              *
-                                                                                                                                                                                                                                                                              * Licensed under the Apache License, Version 2.0 (the "License");
-                                                                                                                                                                                                                                                                              * you may not use this file except in compliance with the License.
-                                                                                                                                                                                                                                                                              * You may obtain a copy of the License at
-                                                                                                                                                                                                                                                                              *
-                                                                                                                                                                                                                                                                              *   http://www.apache.org/licenses/LICENSE-2.0
-                                                                                                                                                                                                                                                                              *
-                                                                                                                                                                                                                                                                              * Unless required by applicable law or agreed to in writing, software
-                                                                                                                                                                                                                                                                              * distributed under the License is distributed on an "AS IS" BASIS,
-                                                                                                                                                                                                                                                                              * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-                                                                                                                                                                                                                                                                              * See the License for the specific language governing permissions and
-                                                                                                                                                                                                                                                                              * limitations under the License.
-                                                                                                                                                                                                                                                                              */
-
-
-var _Path = __webpack_require__(4);
-
-var _obj = __webpack_require__(3);
-
-var _util = __webpack_require__(1);
-
-var _validation = __webpack_require__(15);
-
-var _utf = __webpack_require__(63);
-
-/**
- * True for invalid Firebase keys
- * @type {RegExp}
- * @private
- */
-var INVALID_KEY_REGEX_ = exports.INVALID_KEY_REGEX_ = /[\[\].#$\/\u0000-\u001F\u007F]/;
-/**
- * True for invalid Firebase paths.
- * Allows '/' in paths.
- * @type {RegExp}
- * @private
- */
-var INVALID_PATH_REGEX_ = exports.INVALID_PATH_REGEX_ = /[\[\].#$\u0000-\u001F\u007F]/;
-/**
- * Maximum number of characters to allow in leaf value
- * @type {number}
- * @private
- */
-var MAX_LEAF_SIZE_ = exports.MAX_LEAF_SIZE_ = 10 * 1024 * 1024;
-/**
- * @param {*} key
- * @return {boolean}
- */
-var isValidKey = exports.isValidKey = function isValidKey(key) {
-    return typeof key === 'string' && key.length !== 0 && !INVALID_KEY_REGEX_.test(key);
-};
-/**
- * @param {string} pathString
- * @return {boolean}
- */
-var isValidPathString = exports.isValidPathString = function isValidPathString(pathString) {
-    return typeof pathString === 'string' && pathString.length !== 0 && !INVALID_PATH_REGEX_.test(pathString);
-};
-/**
- * @param {string} pathString
- * @return {boolean}
- */
-var isValidRootPathString = exports.isValidRootPathString = function isValidRootPathString(pathString) {
-    if (pathString) {
-        // Allow '/.info/' at the beginning.
-        pathString = pathString.replace(/^\/*\.info(\/|$)/, '/');
-    }
-    return isValidPathString(pathString);
-};
-/**
- * @param {*} priority
- * @return {boolean}
- */
-var isValidPriority = exports.isValidPriority = function isValidPriority(priority) {
-    return priority === null || typeof priority === 'string' || typeof priority === 'number' && !(0, _util.isInvalidJSONNumber)(priority) || priority && (typeof priority === 'undefined' ? 'undefined' : _typeof(priority)) === 'object' && (0, _obj.contains)(priority, '.sv');
-};
-/**
- * Pre-validate a datum passed as an argument to Firebase function.
- *
- * @param {string} fnName
- * @param {number} argumentNumber
- * @param {*} data
- * @param {!Path} path
- * @param {boolean} optional
- */
-var validateFirebaseDataArg = exports.validateFirebaseDataArg = function validateFirebaseDataArg(fnName, argumentNumber, data, path, optional) {
-    if (optional && data === undefined) return;
-    validateFirebaseData((0, _validation.errorPrefix)(fnName, argumentNumber, optional), data, path);
-};
-/**
- * Validate a data object client-side before sending to server.
- *
- * @param {string} errorPrefix
- * @param {*} data
- * @param {!Path|!ValidationPath} path_
- */
-var validateFirebaseData = exports.validateFirebaseData = function validateFirebaseData(errorPrefix, data, path_) {
-    var path = path_ instanceof _Path.Path ? new _Path.ValidationPath(path_, errorPrefix) : path_;
-    if (data === undefined) {
-        throw new Error(errorPrefix + 'contains undefined ' + path.toErrorString());
-    }
-    if (typeof data === 'function') {
-        throw new Error(errorPrefix + 'contains a function ' + path.toErrorString() + ' with contents = ' + data.toString());
-    }
-    if ((0, _util.isInvalidJSONNumber)(data)) {
-        throw new Error(errorPrefix + 'contains ' + data.toString() + ' ' + path.toErrorString());
-    }
-    // Check max leaf size, but try to avoid the utf8 conversion if we can.
-    if (typeof data === 'string' && data.length > MAX_LEAF_SIZE_ / 3 && (0, _utf.stringLength)(data) > MAX_LEAF_SIZE_) {
-        throw new Error(errorPrefix + 'contains a string greater than ' + MAX_LEAF_SIZE_ + ' utf8 bytes ' + path.toErrorString() + " ('" + data.substring(0, 50) + "...')");
-    }
-    // TODO = Perf = Consider combining the recursive validation of keys into NodeFromJSON
-    // to save extra walking of large objects.
-    if (data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
-        var hasDotValue_1 = false,
-            hasActualChild_1 = false;
-        (0, _obj.forEach)(data, function (key, value) {
-            if (key === '.value') {
-                hasDotValue_1 = true;
-            } else if (key !== '.priority' && key !== '.sv') {
-                hasActualChild_1 = true;
-                if (!isValidKey(key)) {
-                    throw new Error(errorPrefix + ' contains an invalid key (' + key + ') ' + path.toErrorString() + '.  Keys must be non-empty strings ' + 'and can\'t contain ".", "#", "$", "/", "[", or "]"');
-                }
-            }
-            path.push(key);
-            validateFirebaseData(errorPrefix, value, path);
-            path.pop();
-        });
-        if (hasDotValue_1 && hasActualChild_1) {
-            throw new Error(errorPrefix + ' contains ".value" child ' + path.toErrorString() + ' in addition to actual children.');
-        }
-    }
-};
-/**
- * Pre-validate paths passed in the firebase function.
- *
- * @param {string} errorPrefix
- * @param {Array<!Path>} mergePaths
- */
-var validateFirebaseMergePaths = exports.validateFirebaseMergePaths = function validateFirebaseMergePaths(errorPrefix, mergePaths) {
-    var i, curPath;
-    for (i = 0; i < mergePaths.length; i++) {
-        curPath = mergePaths[i];
-        var keys = curPath.slice();
-        for (var j = 0; j < keys.length; j++) {
-            if (keys[j] === '.priority' && j === keys.length - 1) {
-                // .priority is OK
-            } else if (!isValidKey(keys[j])) {
-                throw new Error(errorPrefix + 'contains an invalid key (' + keys[j] + ') in path ' + curPath.toString() + '. Keys must be non-empty strings ' + 'and can\'t contain ".", "#", "$", "/", "[", or "]"');
-            }
-        }
-    }
-    // Check that update keys are not descendants of each other.
-    // We rely on the property that sorting guarantees that ancestors come
-    // right before descendants.
-    mergePaths.sort(_Path.Path.comparePaths);
-    var prevPath = null;
-    for (i = 0; i < mergePaths.length; i++) {
-        curPath = mergePaths[i];
-        if (prevPath !== null && prevPath.contains(curPath)) {
-            throw new Error(errorPrefix + 'contains a path ' + prevPath.toString() + ' that is ancestor of another path ' + curPath.toString());
-        }
-        prevPath = curPath;
-    }
-};
-/**
- * pre-validate an object passed as an argument to firebase function (
- * must be an object - e.g. for firebase.update()).
- *
- * @param {string} fnName
- * @param {number} argumentNumber
- * @param {*} data
- * @param {!Path} path
- * @param {boolean} optional
- */
-var validateFirebaseMergeDataArg = exports.validateFirebaseMergeDataArg = function validateFirebaseMergeDataArg(fnName, argumentNumber, data, path, optional) {
-    if (optional && data === undefined) return;
-    var errorPrefix = (0, _validation.errorPrefix)(fnName, argumentNumber, optional);
-    if (!(data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') || Array.isArray(data)) {
-        throw new Error(errorPrefix + ' must be an object containing the children to replace.');
-    }
-    var mergePaths = [];
-    (0, _obj.forEach)(data, function (key, value) {
-        var curPath = new _Path.Path(key);
-        validateFirebaseData(errorPrefix, value, path.child(curPath));
-        if (curPath.getBack() === '.priority') {
-            if (!isValidPriority(value)) {
-                throw new Error(errorPrefix + "contains an invalid value for '" + curPath.toString() + "', which must be a valid " + 'Firebase priority (a string, finite number, server value, or null).');
-            }
-        }
-        mergePaths.push(curPath);
-    });
-    validateFirebaseMergePaths(errorPrefix, mergePaths);
-};
-var validatePriority = exports.validatePriority = function validatePriority(fnName, argumentNumber, priority, optional) {
-    if (optional && priority === undefined) return;
-    if ((0, _util.isInvalidJSONNumber)(priority)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'is ' + priority.toString() + ', but must be a valid Firebase priority (a string, finite number, ' + 'server value, or null).');
-    // Special case to allow importing data with a .sv.
-    if (!isValidPriority(priority)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid Firebase priority ' + '(a string, finite number, server value, or null).');
-};
-var validateEventType = exports.validateEventType = function validateEventType(fnName, argumentNumber, eventType, optional) {
-    if (optional && eventType === undefined) return;
-    switch (eventType) {
-        case 'value':
-        case 'child_added':
-        case 'child_removed':
-        case 'child_changed':
-        case 'child_moved':
-            break;
-        default:
-            throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid event type = "value", "child_added", "child_removed", ' + '"child_changed", or "child_moved".');
-    }
-};
-var validateKey = exports.validateKey = function validateKey(fnName, argumentNumber, key, optional) {
-    if (optional && key === undefined) return;
-    if (!isValidKey(key)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'was an invalid key = "' + key + '".  Firebase keys must be non-empty strings and ' + 'can\'t contain ".", "#", "$", "/", "[", or "]").');
-};
-var validatePathString = exports.validatePathString = function validatePathString(fnName, argumentNumber, pathString, optional) {
-    if (optional && pathString === undefined) return;
-    if (!isValidPathString(pathString)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'was an invalid path = "' + pathString + '". Paths must be non-empty strings and ' + 'can\'t contain ".", "#", "$", "[", or "]"');
-};
-var validateRootPathString = exports.validateRootPathString = function validateRootPathString(fnName, argumentNumber, pathString, optional) {
-    if (pathString) {
-        // Allow '/.info/' at the beginning.
-        pathString = pathString.replace(/^\/*\.info(\/|$)/, '/');
-    }
-    validatePathString(fnName, argumentNumber, pathString, optional);
-};
-var validateWritablePath = exports.validateWritablePath = function validateWritablePath(fnName, path) {
-    if (path.getFront() === '.info') {
-        throw new Error(fnName + " failed = Can't modify data under /.info/");
-    }
-};
-var validateUrl = exports.validateUrl = function validateUrl(fnName, argumentNumber, parsedUrl) {
-    // TODO = Validate server better.
-    var pathString = parsedUrl.path.toString();
-    if (!(typeof parsedUrl.repoInfo.host === 'string') || parsedUrl.repoInfo.host.length === 0 || !isValidKey(parsedUrl.repoInfo.namespace) || pathString.length !== 0 && !isValidRootPathString(pathString)) {
-        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, false) + 'must be a valid firebase URL and ' + 'the path can\'t contain ".", "#", "$", "[", or "]".');
-    }
-};
-var validateCredential = exports.validateCredential = function validateCredential(fnName, argumentNumber, cred, optional) {
-    if (optional && cred === undefined) return;
-    if (!(typeof cred === 'string')) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid credential (a string).');
-};
-var validateBoolean = exports.validateBoolean = function validateBoolean(fnName, argumentNumber, bool, optional) {
-    if (optional && bool === undefined) return;
-    if (typeof bool !== 'boolean') throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a boolean.');
-};
-var validateString = exports.validateString = function validateString(fnName, argumentNumber, string, optional) {
-    if (optional && string === undefined) return;
-    if (!(typeof string === 'string')) {
-        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid string.');
-    }
-};
-var validateObject = exports.validateObject = function validateObject(fnName, argumentNumber, obj, optional) {
-    if (optional && obj === undefined) return;
-    if (!(obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') || obj === null) {
-        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid object.');
-    }
-};
-var validateObjectContainsKey = exports.validateObjectContainsKey = function validateObjectContainsKey(fnName, argumentNumber, obj, key, optional, opt_type) {
-    var objectContainsKey = obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && (0, _obj.contains)(obj, key);
-    if (!objectContainsKey) {
-        if (optional) {
-            return;
-        } else {
-            throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must contain the key "' + key + '"');
-        }
-    }
-    if (opt_type) {
-        var val = (0, _obj.safeGet)(obj, key);
-        if (opt_type === 'number' && !(typeof val === 'number') || opt_type === 'string' && !(typeof val === 'string') || opt_type === 'boolean' && !(typeof val === 'boolean') || opt_type === 'function' && !(typeof val === 'function') || opt_type === 'object' && !((typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') && val) {
-            if (optional) {
-                throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'contains invalid value for key "' + key + '" (must be of type "' + opt_type + '")');
-            } else {
-                throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must contain the key "' + key + '" with type "' + opt_type + '"');
-            }
-        }
-    }
-};
-//# sourceMappingURL=validation.js.map
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*! @license Firebase v4.4.0
-Build: rev-380121f
-Terms: https://firebase.google.com/terms/ */
-
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.OperationSource = exports.OperationType = undefined;
-
-var _assert = __webpack_require__(0);
-
-/**
- *
- * @enum
- */
-var OperationType = exports.OperationType = undefined; /**
-                                                       * Copyright 2017 Google Inc.
-                                                       *
-                                                       * Licensed under the Apache License, Version 2.0 (the "License");
-                                                       * you may not use this file except in compliance with the License.
-                                                       * You may obtain a copy of the License at
-                                                       *
-                                                       *   http://www.apache.org/licenses/LICENSE-2.0
-                                                       *
-                                                       * Unless required by applicable law or agreed to in writing, software
-                                                       * distributed under the License is distributed on an "AS IS" BASIS,
-                                                       * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-                                                       * See the License for the specific language governing permissions and
-                                                       * limitations under the License.
-                                                       */
-
-(function (OperationType) {
-  OperationType[OperationType["OVERWRITE"] = 0] = "OVERWRITE";
-  OperationType[OperationType["MERGE"] = 1] = "MERGE";
-  OperationType[OperationType["ACK_USER_WRITE"] = 2] = "ACK_USER_WRITE";
-  OperationType[OperationType["LISTEN_COMPLETE"] = 3] = "LISTEN_COMPLETE";
-})(OperationType || (exports.OperationType = OperationType = {}));
-/**
- * @param {boolean} fromUser
- * @param {boolean} fromServer
- * @param {?string} queryId
- * @param {boolean} tagged
- * @constructor
- */
-var OperationSource = /** @class */function () {
-  function OperationSource(fromUser, fromServer, queryId, tagged) {
-    this.fromUser = fromUser;
-    this.fromServer = fromServer;
-    this.queryId = queryId;
-    this.tagged = tagged;
-    (0, _assert.assert)(!tagged || fromServer, 'Tagged queries must be from server.');
-  }
-  /**
-   * @const
-   * @type {!OperationSource}
-   */
-  OperationSource.User = new OperationSource(
-  /*fromUser=*/true, false, null,
-  /*tagged=*/false);
-  /**
-   * @const
-   * @type {!OperationSource}
-   */
-  OperationSource.Server = new OperationSource(false,
-  /*fromServer=*/true, null,
-  /*tagged=*/false);
-  /**
-   * @param {string} queryId
-   * @return {!OperationSource}
-   */
-  OperationSource.forServerTaggedQuery = function (queryId) {
-    return new OperationSource(false,
-    /*fromServer=*/true, queryId,
-    /*tagged=*/true);
-  };
-  return OperationSource;
-}();
-exports.OperationSource = OperationSource;
-//# sourceMappingURL=Operation.js.map
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*! @license Firebase v4.4.0
-Build: rev-380121f
-Terms: https://firebase.google.com/terms/ */
-
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.make = make;
-exports.resolve = resolve;
-exports.reject = reject;
-
-var _promise = __webpack_require__(14);
-
-function make(resolver) {
-  return new _promise.PromiseImpl(resolver);
-}
-/**
- * @template T
- */
-/**
-* Copyright 2017 Google Inc.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-/**
- * @fileoverview Implements the promise abstraction interface for external
- * (public SDK) packaging, which just passes through to the firebase-app impl.
- */
-/**
- * @template T
- * @param {function((function(T): void),
- *                  (function(!Error): void))} resolver
- */
-function resolve(value) {
-  return _promise.PromiseImpl.resolve(value);
-}
-function reject(error) {
-  return _promise.PromiseImpl.reject(error);
-}
-//# sourceMappingURL=promise_external.js.map
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -13696,6 +12938,764 @@ return jQuery;
 
 
 /***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+var utils = __webpack_require__(2);
+var normalizeHeaderName = __webpack_require__(47);
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+function setContentTypeIfUnset(headers, value) {
+  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = __webpack_require__(25);
+  } else if (typeof process !== 'undefined') {
+    // For node use HTTP adapter
+    adapter = __webpack_require__(25);
+  }
+  return adapter;
+}
+
+var defaults = {
+  adapter: getDefaultAdapter(),
+
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type');
+    if (utils.isFormData(data) ||
+      utils.isArrayBuffer(data) ||
+      utils.isBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+      return JSON.stringify(data);
+    }
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    /*eslint no-param-reassign:0*/
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) { /* Ignore */ }
+    }
+    return data;
+  }],
+
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  }
+};
+
+defaults.headers = {
+  common: {
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
+
+utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults.headers[method] = {};
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+});
+
+module.exports = defaults;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*! @license Firebase v4.4.0
+Build: rev-380121f
+Terms: https://firebase.google.com/terms/ */
+
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.attachDummyErrorHandler = exports.Deferred = exports.PromiseImpl = undefined;
+
+var _globalScope = __webpack_require__(78);
+
+var PromiseImpl = exports.PromiseImpl = _globalScope.globalScope.Promise || __webpack_require__(123);
+/**
+ * A deferred promise implementation.
+ */
+/**
+* Copyright 2017 Google Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+var Deferred = /** @class */function () {
+    /** @constructor */
+    function Deferred() {
+        var self = this;
+        this.resolve = null;
+        this.reject = null;
+        this.promise = new PromiseImpl(function (resolve, reject) {
+            self.resolve = resolve;
+            self.reject = reject;
+        });
+    }
+    /**
+     * Our API internals are not promiseified and cannot because our callback APIs have subtle expectations around
+     * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
+     * and returns a node-style callback which will resolve or reject the Deferred's promise.
+     * @param {((?function(?(Error)): (?|undefined))| (?function(?(Error),?=): (?|undefined)))=} opt_nodeCallback
+     * @return {!function(?(Error), ?=)}
+     */
+    Deferred.prototype.wrapCallback = function (opt_nodeCallback) {
+        var self = this;
+        /**
+           * @param {?Error} error
+           * @param {?=} opt_value
+           */
+        function meta(error, opt_value) {
+            if (error) {
+                self.reject(error);
+            } else {
+                self.resolve(opt_value);
+            }
+            if (typeof opt_nodeCallback === 'function') {
+                attachDummyErrorHandler(self.promise);
+                // Some of our callbacks don't expect a value and our own tests
+                // assert that the parameter length is 1
+                if (opt_nodeCallback.length === 1) {
+                    opt_nodeCallback(error);
+                } else {
+                    opt_nodeCallback(error, opt_value);
+                }
+            }
+        }
+        return meta;
+    };
+    return Deferred;
+}();
+exports.Deferred = Deferred;
+/**
+ * Chrome (and maybe other browsers) report an Error in the console if you reject a promise
+ * and nobody handles the error. This is normally a good thing, but this will confuse devs who
+ * never intended to use promises in the first place. So in some cases (in particular, if the
+ * developer attached a callback), we should attach a dummy resolver to the promise to suppress
+ * this error.
+ *
+ * Note: We can't do this all the time, since it breaks the Promise spec (though in the obscure
+ * 3.3.3 section related to upgrading non-compliant promises).
+ * @param {!firebase.Promise} promise
+ */
+
+var attachDummyErrorHandler = exports.attachDummyErrorHandler = function attachDummyErrorHandler(promise) {
+    promise.catch(function () {});
+};
+//# sourceMappingURL=promise.js.map
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*! @license Firebase v4.4.0
+Build: rev-380121f
+Terms: https://firebase.google.com/terms/ */
+
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.errorPrefix = errorPrefix;
+/**
+* Copyright 2017 Google Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+/**
+ * Check to make sure the appropriate number of arguments are provided for a public function.
+ * Throws an error if it fails.
+ *
+ * @param {!string} fnName The function name
+ * @param {!number} minCount The minimum number of arguments to allow for the function call
+ * @param {!number} maxCount The maximum number of argument to allow for the function call
+ * @param {!number} argCount The actual number of arguments provided.
+ */
+var validateArgCount = exports.validateArgCount = function validateArgCount(fnName, minCount, maxCount, argCount) {
+    var argError;
+    if (argCount < minCount) {
+        argError = 'at least ' + minCount;
+    } else if (argCount > maxCount) {
+        argError = maxCount === 0 ? 'none' : 'no more than ' + maxCount;
+    }
+    if (argError) {
+        var error = fnName + ' failed: Was called with ' + argCount + (argCount === 1 ? ' argument.' : ' arguments.') + ' Expects ' + argError + '.';
+        throw new Error(error);
+    }
+};
+/**
+ * Generates a string to prefix an error message about failed argument validation
+ *
+ * @param {!string} fnName The function name
+ * @param {!number} argumentNumber The index of the argument
+ * @param {boolean} optional Whether or not the argument is optional
+ * @return {!string} The prefix to add to the error thrown for validation.
+ */
+function errorPrefix(fnName, argumentNumber, optional) {
+    var argName = '';
+    switch (argumentNumber) {
+        case 1:
+            argName = optional ? 'first' : 'First';
+            break;
+        case 2:
+            argName = optional ? 'second' : 'Second';
+            break;
+        case 3:
+            argName = optional ? 'third' : 'Third';
+            break;
+        case 4:
+            argName = optional ? 'fourth' : 'Fourth';
+            break;
+        default:
+            throw new Error('errorPrefix called with argumentNumber > 4.  Need to update it?');
+    }
+    var error = fnName + ' failed: ';
+    error += argName + ' argument ';
+    return error;
+}
+/**
+ * @param {!string} fnName
+ * @param {!number} argumentNumber
+ * @param {!string} namespace
+ * @param {boolean} optional
+ */
+var validateNamespace = exports.validateNamespace = function validateNamespace(fnName, argumentNumber, namespace, optional) {
+    if (optional && !namespace) return;
+    if (typeof namespace !== 'string') {
+        //TODO: I should do more validation here. We only allow certain chars in namespaces.
+        throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid firebase namespace.');
+    }
+};
+var validateCallback = exports.validateCallback = function validateCallback(fnName, argumentNumber, callback, optional) {
+    if (optional && !callback) return;
+    if (typeof callback !== 'function') throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid function.');
+};
+var validateContextObject = exports.validateContextObject = function validateContextObject(fnName, argumentNumber, context, optional) {
+    if (optional && !context) return;
+    if ((typeof context === 'undefined' ? 'undefined' : _typeof(context)) !== 'object' || context === null) throw new Error(errorPrefix(fnName, argumentNumber, optional) + 'must be a valid context object.');
+};
+//# sourceMappingURL=validation.js.map
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*! @license Firebase v4.4.0
+Build: rev-380121f
+Terms: https://firebase.google.com/terms/ */
+
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.validateObjectContainsKey = exports.validateObject = exports.validateString = exports.validateBoolean = exports.validateCredential = exports.validateUrl = exports.validateWritablePath = exports.validateRootPathString = exports.validatePathString = exports.validateKey = exports.validateEventType = exports.validatePriority = exports.validateFirebaseMergeDataArg = exports.validateFirebaseMergePaths = exports.validateFirebaseData = exports.validateFirebaseDataArg = exports.isValidPriority = exports.isValidRootPathString = exports.isValidPathString = exports.isValidKey = exports.MAX_LEAF_SIZE_ = exports.INVALID_PATH_REGEX_ = exports.INVALID_KEY_REGEX_ = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                              * Copyright 2017 Google Inc.
+                                                                                                                                                                                                                                                                              *
+                                                                                                                                                                                                                                                                              * Licensed under the Apache License, Version 2.0 (the "License");
+                                                                                                                                                                                                                                                                              * you may not use this file except in compliance with the License.
+                                                                                                                                                                                                                                                                              * You may obtain a copy of the License at
+                                                                                                                                                                                                                                                                              *
+                                                                                                                                                                                                                                                                              *   http://www.apache.org/licenses/LICENSE-2.0
+                                                                                                                                                                                                                                                                              *
+                                                                                                                                                                                                                                                                              * Unless required by applicable law or agreed to in writing, software
+                                                                                                                                                                                                                                                                              * distributed under the License is distributed on an "AS IS" BASIS,
+                                                                                                                                                                                                                                                                              * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                                                                                                                                                                                                                                                                              * See the License for the specific language governing permissions and
+                                                                                                                                                                                                                                                                              * limitations under the License.
+                                                                                                                                                                                                                                                                              */
+
+
+var _Path = __webpack_require__(4);
+
+var _obj = __webpack_require__(3);
+
+var _util = __webpack_require__(1);
+
+var _validation = __webpack_require__(16);
+
+var _utf = __webpack_require__(63);
+
+/**
+ * True for invalid Firebase keys
+ * @type {RegExp}
+ * @private
+ */
+var INVALID_KEY_REGEX_ = exports.INVALID_KEY_REGEX_ = /[\[\].#$\/\u0000-\u001F\u007F]/;
+/**
+ * True for invalid Firebase paths.
+ * Allows '/' in paths.
+ * @type {RegExp}
+ * @private
+ */
+var INVALID_PATH_REGEX_ = exports.INVALID_PATH_REGEX_ = /[\[\].#$\u0000-\u001F\u007F]/;
+/**
+ * Maximum number of characters to allow in leaf value
+ * @type {number}
+ * @private
+ */
+var MAX_LEAF_SIZE_ = exports.MAX_LEAF_SIZE_ = 10 * 1024 * 1024;
+/**
+ * @param {*} key
+ * @return {boolean}
+ */
+var isValidKey = exports.isValidKey = function isValidKey(key) {
+    return typeof key === 'string' && key.length !== 0 && !INVALID_KEY_REGEX_.test(key);
+};
+/**
+ * @param {string} pathString
+ * @return {boolean}
+ */
+var isValidPathString = exports.isValidPathString = function isValidPathString(pathString) {
+    return typeof pathString === 'string' && pathString.length !== 0 && !INVALID_PATH_REGEX_.test(pathString);
+};
+/**
+ * @param {string} pathString
+ * @return {boolean}
+ */
+var isValidRootPathString = exports.isValidRootPathString = function isValidRootPathString(pathString) {
+    if (pathString) {
+        // Allow '/.info/' at the beginning.
+        pathString = pathString.replace(/^\/*\.info(\/|$)/, '/');
+    }
+    return isValidPathString(pathString);
+};
+/**
+ * @param {*} priority
+ * @return {boolean}
+ */
+var isValidPriority = exports.isValidPriority = function isValidPriority(priority) {
+    return priority === null || typeof priority === 'string' || typeof priority === 'number' && !(0, _util.isInvalidJSONNumber)(priority) || priority && (typeof priority === 'undefined' ? 'undefined' : _typeof(priority)) === 'object' && (0, _obj.contains)(priority, '.sv');
+};
+/**
+ * Pre-validate a datum passed as an argument to Firebase function.
+ *
+ * @param {string} fnName
+ * @param {number} argumentNumber
+ * @param {*} data
+ * @param {!Path} path
+ * @param {boolean} optional
+ */
+var validateFirebaseDataArg = exports.validateFirebaseDataArg = function validateFirebaseDataArg(fnName, argumentNumber, data, path, optional) {
+    if (optional && data === undefined) return;
+    validateFirebaseData((0, _validation.errorPrefix)(fnName, argumentNumber, optional), data, path);
+};
+/**
+ * Validate a data object client-side before sending to server.
+ *
+ * @param {string} errorPrefix
+ * @param {*} data
+ * @param {!Path|!ValidationPath} path_
+ */
+var validateFirebaseData = exports.validateFirebaseData = function validateFirebaseData(errorPrefix, data, path_) {
+    var path = path_ instanceof _Path.Path ? new _Path.ValidationPath(path_, errorPrefix) : path_;
+    if (data === undefined) {
+        throw new Error(errorPrefix + 'contains undefined ' + path.toErrorString());
+    }
+    if (typeof data === 'function') {
+        throw new Error(errorPrefix + 'contains a function ' + path.toErrorString() + ' with contents = ' + data.toString());
+    }
+    if ((0, _util.isInvalidJSONNumber)(data)) {
+        throw new Error(errorPrefix + 'contains ' + data.toString() + ' ' + path.toErrorString());
+    }
+    // Check max leaf size, but try to avoid the utf8 conversion if we can.
+    if (typeof data === 'string' && data.length > MAX_LEAF_SIZE_ / 3 && (0, _utf.stringLength)(data) > MAX_LEAF_SIZE_) {
+        throw new Error(errorPrefix + 'contains a string greater than ' + MAX_LEAF_SIZE_ + ' utf8 bytes ' + path.toErrorString() + " ('" + data.substring(0, 50) + "...')");
+    }
+    // TODO = Perf = Consider combining the recursive validation of keys into NodeFromJSON
+    // to save extra walking of large objects.
+    if (data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
+        var hasDotValue_1 = false,
+            hasActualChild_1 = false;
+        (0, _obj.forEach)(data, function (key, value) {
+            if (key === '.value') {
+                hasDotValue_1 = true;
+            } else if (key !== '.priority' && key !== '.sv') {
+                hasActualChild_1 = true;
+                if (!isValidKey(key)) {
+                    throw new Error(errorPrefix + ' contains an invalid key (' + key + ') ' + path.toErrorString() + '.  Keys must be non-empty strings ' + 'and can\'t contain ".", "#", "$", "/", "[", or "]"');
+                }
+            }
+            path.push(key);
+            validateFirebaseData(errorPrefix, value, path);
+            path.pop();
+        });
+        if (hasDotValue_1 && hasActualChild_1) {
+            throw new Error(errorPrefix + ' contains ".value" child ' + path.toErrorString() + ' in addition to actual children.');
+        }
+    }
+};
+/**
+ * Pre-validate paths passed in the firebase function.
+ *
+ * @param {string} errorPrefix
+ * @param {Array<!Path>} mergePaths
+ */
+var validateFirebaseMergePaths = exports.validateFirebaseMergePaths = function validateFirebaseMergePaths(errorPrefix, mergePaths) {
+    var i, curPath;
+    for (i = 0; i < mergePaths.length; i++) {
+        curPath = mergePaths[i];
+        var keys = curPath.slice();
+        for (var j = 0; j < keys.length; j++) {
+            if (keys[j] === '.priority' && j === keys.length - 1) {
+                // .priority is OK
+            } else if (!isValidKey(keys[j])) {
+                throw new Error(errorPrefix + 'contains an invalid key (' + keys[j] + ') in path ' + curPath.toString() + '. Keys must be non-empty strings ' + 'and can\'t contain ".", "#", "$", "/", "[", or "]"');
+            }
+        }
+    }
+    // Check that update keys are not descendants of each other.
+    // We rely on the property that sorting guarantees that ancestors come
+    // right before descendants.
+    mergePaths.sort(_Path.Path.comparePaths);
+    var prevPath = null;
+    for (i = 0; i < mergePaths.length; i++) {
+        curPath = mergePaths[i];
+        if (prevPath !== null && prevPath.contains(curPath)) {
+            throw new Error(errorPrefix + 'contains a path ' + prevPath.toString() + ' that is ancestor of another path ' + curPath.toString());
+        }
+        prevPath = curPath;
+    }
+};
+/**
+ * pre-validate an object passed as an argument to firebase function (
+ * must be an object - e.g. for firebase.update()).
+ *
+ * @param {string} fnName
+ * @param {number} argumentNumber
+ * @param {*} data
+ * @param {!Path} path
+ * @param {boolean} optional
+ */
+var validateFirebaseMergeDataArg = exports.validateFirebaseMergeDataArg = function validateFirebaseMergeDataArg(fnName, argumentNumber, data, path, optional) {
+    if (optional && data === undefined) return;
+    var errorPrefix = (0, _validation.errorPrefix)(fnName, argumentNumber, optional);
+    if (!(data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') || Array.isArray(data)) {
+        throw new Error(errorPrefix + ' must be an object containing the children to replace.');
+    }
+    var mergePaths = [];
+    (0, _obj.forEach)(data, function (key, value) {
+        var curPath = new _Path.Path(key);
+        validateFirebaseData(errorPrefix, value, path.child(curPath));
+        if (curPath.getBack() === '.priority') {
+            if (!isValidPriority(value)) {
+                throw new Error(errorPrefix + "contains an invalid value for '" + curPath.toString() + "', which must be a valid " + 'Firebase priority (a string, finite number, server value, or null).');
+            }
+        }
+        mergePaths.push(curPath);
+    });
+    validateFirebaseMergePaths(errorPrefix, mergePaths);
+};
+var validatePriority = exports.validatePriority = function validatePriority(fnName, argumentNumber, priority, optional) {
+    if (optional && priority === undefined) return;
+    if ((0, _util.isInvalidJSONNumber)(priority)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'is ' + priority.toString() + ', but must be a valid Firebase priority (a string, finite number, ' + 'server value, or null).');
+    // Special case to allow importing data with a .sv.
+    if (!isValidPriority(priority)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid Firebase priority ' + '(a string, finite number, server value, or null).');
+};
+var validateEventType = exports.validateEventType = function validateEventType(fnName, argumentNumber, eventType, optional) {
+    if (optional && eventType === undefined) return;
+    switch (eventType) {
+        case 'value':
+        case 'child_added':
+        case 'child_removed':
+        case 'child_changed':
+        case 'child_moved':
+            break;
+        default:
+            throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid event type = "value", "child_added", "child_removed", ' + '"child_changed", or "child_moved".');
+    }
+};
+var validateKey = exports.validateKey = function validateKey(fnName, argumentNumber, key, optional) {
+    if (optional && key === undefined) return;
+    if (!isValidKey(key)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'was an invalid key = "' + key + '".  Firebase keys must be non-empty strings and ' + 'can\'t contain ".", "#", "$", "/", "[", or "]").');
+};
+var validatePathString = exports.validatePathString = function validatePathString(fnName, argumentNumber, pathString, optional) {
+    if (optional && pathString === undefined) return;
+    if (!isValidPathString(pathString)) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'was an invalid path = "' + pathString + '". Paths must be non-empty strings and ' + 'can\'t contain ".", "#", "$", "[", or "]"');
+};
+var validateRootPathString = exports.validateRootPathString = function validateRootPathString(fnName, argumentNumber, pathString, optional) {
+    if (pathString) {
+        // Allow '/.info/' at the beginning.
+        pathString = pathString.replace(/^\/*\.info(\/|$)/, '/');
+    }
+    validatePathString(fnName, argumentNumber, pathString, optional);
+};
+var validateWritablePath = exports.validateWritablePath = function validateWritablePath(fnName, path) {
+    if (path.getFront() === '.info') {
+        throw new Error(fnName + " failed = Can't modify data under /.info/");
+    }
+};
+var validateUrl = exports.validateUrl = function validateUrl(fnName, argumentNumber, parsedUrl) {
+    // TODO = Validate server better.
+    var pathString = parsedUrl.path.toString();
+    if (!(typeof parsedUrl.repoInfo.host === 'string') || parsedUrl.repoInfo.host.length === 0 || !isValidKey(parsedUrl.repoInfo.namespace) || pathString.length !== 0 && !isValidRootPathString(pathString)) {
+        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, false) + 'must be a valid firebase URL and ' + 'the path can\'t contain ".", "#", "$", "[", or "]".');
+    }
+};
+var validateCredential = exports.validateCredential = function validateCredential(fnName, argumentNumber, cred, optional) {
+    if (optional && cred === undefined) return;
+    if (!(typeof cred === 'string')) throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid credential (a string).');
+};
+var validateBoolean = exports.validateBoolean = function validateBoolean(fnName, argumentNumber, bool, optional) {
+    if (optional && bool === undefined) return;
+    if (typeof bool !== 'boolean') throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a boolean.');
+};
+var validateString = exports.validateString = function validateString(fnName, argumentNumber, string, optional) {
+    if (optional && string === undefined) return;
+    if (!(typeof string === 'string')) {
+        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid string.');
+    }
+};
+var validateObject = exports.validateObject = function validateObject(fnName, argumentNumber, obj, optional) {
+    if (optional && obj === undefined) return;
+    if (!(obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') || obj === null) {
+        throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must be a valid object.');
+    }
+};
+var validateObjectContainsKey = exports.validateObjectContainsKey = function validateObjectContainsKey(fnName, argumentNumber, obj, key, optional, opt_type) {
+    var objectContainsKey = obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && (0, _obj.contains)(obj, key);
+    if (!objectContainsKey) {
+        if (optional) {
+            return;
+        } else {
+            throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must contain the key "' + key + '"');
+        }
+    }
+    if (opt_type) {
+        var val = (0, _obj.safeGet)(obj, key);
+        if (opt_type === 'number' && !(typeof val === 'number') || opt_type === 'string' && !(typeof val === 'string') || opt_type === 'boolean' && !(typeof val === 'boolean') || opt_type === 'function' && !(typeof val === 'function') || opt_type === 'object' && !((typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') && val) {
+            if (optional) {
+                throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'contains invalid value for key "' + key + '" (must be of type "' + opt_type + '")');
+            } else {
+                throw new Error((0, _validation.errorPrefix)(fnName, argumentNumber, optional) + 'must contain the key "' + key + '" with type "' + opt_type + '"');
+            }
+        }
+    }
+};
+//# sourceMappingURL=validation.js.map
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*! @license Firebase v4.4.0
+Build: rev-380121f
+Terms: https://firebase.google.com/terms/ */
+
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.OperationSource = exports.OperationType = undefined;
+
+var _assert = __webpack_require__(0);
+
+/**
+ *
+ * @enum
+ */
+var OperationType = exports.OperationType = undefined; /**
+                                                       * Copyright 2017 Google Inc.
+                                                       *
+                                                       * Licensed under the Apache License, Version 2.0 (the "License");
+                                                       * you may not use this file except in compliance with the License.
+                                                       * You may obtain a copy of the License at
+                                                       *
+                                                       *   http://www.apache.org/licenses/LICENSE-2.0
+                                                       *
+                                                       * Unless required by applicable law or agreed to in writing, software
+                                                       * distributed under the License is distributed on an "AS IS" BASIS,
+                                                       * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                                                       * See the License for the specific language governing permissions and
+                                                       * limitations under the License.
+                                                       */
+
+(function (OperationType) {
+  OperationType[OperationType["OVERWRITE"] = 0] = "OVERWRITE";
+  OperationType[OperationType["MERGE"] = 1] = "MERGE";
+  OperationType[OperationType["ACK_USER_WRITE"] = 2] = "ACK_USER_WRITE";
+  OperationType[OperationType["LISTEN_COMPLETE"] = 3] = "LISTEN_COMPLETE";
+})(OperationType || (exports.OperationType = OperationType = {}));
+/**
+ * @param {boolean} fromUser
+ * @param {boolean} fromServer
+ * @param {?string} queryId
+ * @param {boolean} tagged
+ * @constructor
+ */
+var OperationSource = /** @class */function () {
+  function OperationSource(fromUser, fromServer, queryId, tagged) {
+    this.fromUser = fromUser;
+    this.fromServer = fromServer;
+    this.queryId = queryId;
+    this.tagged = tagged;
+    (0, _assert.assert)(!tagged || fromServer, 'Tagged queries must be from server.');
+  }
+  /**
+   * @const
+   * @type {!OperationSource}
+   */
+  OperationSource.User = new OperationSource(
+  /*fromUser=*/true, false, null,
+  /*tagged=*/false);
+  /**
+   * @const
+   * @type {!OperationSource}
+   */
+  OperationSource.Server = new OperationSource(false,
+  /*fromServer=*/true, null,
+  /*tagged=*/false);
+  /**
+   * @param {string} queryId
+   * @return {!OperationSource}
+   */
+  OperationSource.forServerTaggedQuery = function (queryId) {
+    return new OperationSource(false,
+    /*fromServer=*/true, queryId,
+    /*tagged=*/true);
+  };
+  return OperationSource;
+}();
+exports.OperationSource = OperationSource;
+//# sourceMappingURL=Operation.js.map
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*! @license Firebase v4.4.0
+Build: rev-380121f
+Terms: https://firebase.google.com/terms/ */
+
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.make = make;
+exports.resolve = resolve;
+exports.reject = reject;
+
+var _promise = __webpack_require__(15);
+
+function make(resolver) {
+  return new _promise.PromiseImpl(resolver);
+}
+/**
+ * @template T
+ */
+/**
+* Copyright 2017 Google Inc.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+/**
+ * @fileoverview Implements the promise abstraction interface for external
+ * (public SDK) packaging, which just passes through to the firebase-app impl.
+ */
+/**
+ * @template T
+ * @param {function((function(T): void),
+ *                  (function(!Error): void))} resolver
+ */
+function resolve(value) {
+  return _promise.PromiseImpl.resolve(value);
+}
+function reject(error) {
+  return _promise.PromiseImpl.reject(error);
+}
+//# sourceMappingURL=promise_external.js.map
+
+
+/***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19885,7 +19885,7 @@ var Popover = function ($) {
 
 
 })();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19), __webpack_require__(42)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(42)))
 
 /***/ }),
 /* 42 */
@@ -22358,7 +22358,7 @@ module.exports = __webpack_require__(44);
 var utils = __webpack_require__(2);
 var bind = __webpack_require__(23);
 var Axios = __webpack_require__(46);
-var defaults = __webpack_require__(13);
+var defaults = __webpack_require__(14);
 
 /**
  * Create an instance of Axios
@@ -22441,7 +22441,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(13);
+var defaults = __webpack_require__(14);
 var utils = __webpack_require__(2);
 var InterceptorManager = __webpack_require__(55);
 var dispatchRequest = __webpack_require__(56);
@@ -22973,7 +22973,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(2);
 var transformData = __webpack_require__(57);
 var isCancel = __webpack_require__(27);
-var defaults = __webpack_require__(13);
+var defaults = __webpack_require__(14);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -23445,11 +23445,11 @@ var _Path = __webpack_require__(4);
 
 var _QueryParams = __webpack_require__(161);
 
-var _validation = __webpack_require__(16);
+var _validation = __webpack_require__(17);
 
-var _validation2 = __webpack_require__(15);
+var _validation2 = __webpack_require__(16);
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 var _SyncPoint = __webpack_require__(95);
 
@@ -24963,7 +24963,7 @@ var _util = __webpack_require__(1);
 
 var _parser = __webpack_require__(81);
 
-var _validation = __webpack_require__(16);
+var _validation = __webpack_require__(17);
 
 __webpack_require__(163);
 
@@ -36035,7 +36035,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.createSubscribe = createSubscribe;
 exports.async = async;
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 /**
  * Helper to make a Subscribe function (just like Promise helps make a
@@ -36400,7 +36400,7 @@ var _parser = __webpack_require__(81);
 
 var _Path = __webpack_require__(4);
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 var _Reference = __webpack_require__(64);
 
@@ -36408,9 +36408,9 @@ var _Repo = __webpack_require__(36);
 
 var _RepoManager = __webpack_require__(69);
 
-var _validation = __webpack_require__(15);
+var _validation = __webpack_require__(16);
 
-var _validation2 = __webpack_require__(16);
+var _validation2 = __webpack_require__(17);
 
 /**
  * Class representing a firebase database.
@@ -36844,13 +36844,13 @@ var _util = __webpack_require__(1);
 
 var _Path = __webpack_require__(4);
 
-var _validation = __webpack_require__(16);
+var _validation = __webpack_require__(17);
 
-var _validation2 = __webpack_require__(15);
+var _validation2 = __webpack_require__(16);
 
 var _EventRegistration = __webpack_require__(136);
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 var __referenceConstructor;
 /**
@@ -38014,9 +38014,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.DataSnapshot = undefined;
 
-var _validation = __webpack_require__(15);
+var _validation = __webpack_require__(16);
 
-var _validation2 = __webpack_require__(16);
+var _validation2 = __webpack_require__(17);
 
 var _Path = __webpack_require__(4);
 
@@ -38619,7 +38619,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Overwrite = undefined;
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var _Path = __webpack_require__(4);
 
@@ -43070,7 +43070,7 @@ $(function () {
         });
     });
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 /* 117 */
@@ -60412,7 +60412,7 @@ var _subscribe = __webpack_require__(77);
 
 var _errors = __webpack_require__(62);
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 var _deep_copy = __webpack_require__(79);
 
@@ -62483,13 +62483,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.OnDisconnect = undefined;
 
-var _validation = __webpack_require__(15);
+var _validation = __webpack_require__(16);
 
-var _validation2 = __webpack_require__(16);
+var _validation2 = __webpack_require__(17);
 
 var _util = __webpack_require__(1);
 
-var _promise = __webpack_require__(14);
+var _promise = __webpack_require__(15);
 
 /**
  * @constructor
@@ -62615,7 +62615,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TransactionResult = undefined;
 
-var _validation = __webpack_require__(15);
+var _validation = __webpack_require__(16);
 
 var TransactionResult = /** @class */function () {
     /**
@@ -63127,7 +63127,7 @@ var _ListenComplete = __webpack_require__(140);
 
 var _Merge = __webpack_require__(141);
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var _Overwrite = __webpack_require__(94);
 
@@ -63830,7 +63830,7 @@ var _assert = __webpack_require__(0);
 
 var _Path = __webpack_require__(4);
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var AckUserWrite = /** @class */function () {
     /**
@@ -63905,7 +63905,7 @@ exports.ListenComplete = undefined;
 
 var _Path = __webpack_require__(4);
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 /**
  * @param {!OperationSource} source
@@ -63964,7 +63964,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Merge = undefined;
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var _Overwrite = __webpack_require__(94);
 
@@ -64068,7 +64068,7 @@ var _EventGenerator = __webpack_require__(146);
 
 var _assert = __webpack_require__(0);
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var _Change = __webpack_require__(21);
 
@@ -64280,7 +64280,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ViewProcessor = exports.ProcessorResult = undefined;
 
-var _Operation = __webpack_require__(17);
+var _Operation = __webpack_require__(18);
 
 var _assert = __webpack_require__(0);
 
@@ -68035,7 +68035,7 @@ var _util = __webpack_require__(1);
 
 var _ServerValues = __webpack_require__(91);
 
-var _validation = __webpack_require__(16);
+var _validation = __webpack_require__(17);
 
 var _obj = __webpack_require__(3);
 
@@ -69119,7 +69119,7 @@ var _object = __webpack_require__(22);
 
 var object = _interopRequireWildcard(_object);
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var promiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -69480,7 +69480,7 @@ var _error = __webpack_require__(11);
 
 var errors = _interopRequireWildcard(_error);
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var fbsPromiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -70144,7 +70144,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.async = async;
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var promiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -70210,7 +70210,7 @@ var _authwrapper = __webpack_require__(178);
 
 var _location = __webpack_require__(39);
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var fbsPromiseImpl = _interopRequireWildcard(_promise_external);
 
@@ -70389,7 +70389,7 @@ var _failrequest = __webpack_require__(179);
 
 var _location = __webpack_require__(39);
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var promiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -70526,7 +70526,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FailRequest = undefined;
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var promiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -70673,7 +70673,7 @@ var _object = __webpack_require__(22);
 
 var object = _interopRequireWildcard(_object);
 
-var _promise_external = __webpack_require__(18);
+var _promise_external = __webpack_require__(19);
 
 var promiseimpl = _interopRequireWildcard(_promise_external);
 
@@ -72274,7 +72274,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
  */
 /* global define */
 ; (function (define) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(19)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(13)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
         return (function () {
             var $container;
             var listener;
