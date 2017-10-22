@@ -46,9 +46,10 @@
                         <option value="dev">Dev</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group text-right">
                     <input type="hidden" name="id" value="{{ $admin->id }}">
                     {{ csrf_field() }}
+                    <a href="{{ route('admin.admins') }}" class="btn btn-danger">Cancel</a>
                     <button class="btn btn-success">Save</button>
                 </div>
             </form>

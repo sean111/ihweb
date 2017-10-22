@@ -44,5 +44,14 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
     Route::group(['prefix' => 'admin'], function() {
         Route::get('edit/{id}', 'Admin\AdminController@edit')->name('admin.admins.edit');
         Route::get('new', 'Admin\AdminController@edit')->name('admin.admins.new');
+        Route::get('delete/{id}', 'Admin\AdminController@delete')->name('admin.admins.delete');
+    });
+
+    //Categories
+    Route::get('categories', 'Admin\CategoriesController@index')->name('admin.categories');
+    Route::group(['prefix' => 'category'], function() {
+        Route::get('edit/{id}', 'Admin\CategoriesController@edit')->name('admin.category.edit');
+        Route::get('new', 'Admin\CategoriesController@edit')->name('admin.category.new');
+        Route::post('save', 'Admin\CategoriesController@save')->name('admin.category.save');
     });
 });

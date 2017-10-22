@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-    @include('partials.orgswitcher')
     <div class="card">
         <div class="card-header">
             Users
@@ -30,7 +29,7 @@
                             <td>{{ $user->firebase_uid }}</td>
                             <td>
                                 <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                                <a href="{{ route('admin.user.delete', ['id' => $user->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Danger</a>
+                                <a href="{{ route('admin.user.delete', ['id' => $user->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
                             </td>
                         </tr>
                     @endforeach

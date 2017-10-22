@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Log;
 
 class AdminController extends Controller
 {
@@ -29,5 +30,14 @@ class AdminController extends Controller
         $orgs = getOrgs();
         \Debugbar::info($orgs);
         return $this->view('admin.admins.edit', ['admin' => $admin, 'orgs' => $orgs]);
+    }
+
+    public function delete(int $id)
+    {
+        try {
+            $admin = User::findOrFail($id);
+        } catch (\Throwable $e) {
+            Log::exception($e);
+        }
     }
 }

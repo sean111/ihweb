@@ -25,7 +25,7 @@
                         <td>{{ $org->domain }}</td>
                         <td>
                             <a href="{{ route('admin.org.edit', ['id' => $org->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                            <a href="{{ route('admin.org.delete', ['id' => $org->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Danger</a>
+                            <a href="{{ route('admin.org.delete', ['id' => $org->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
                         </td>
                     </tr>
                 @endforeach

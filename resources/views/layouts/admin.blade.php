@@ -55,15 +55,9 @@
                     <li class="nav-title">
                         Menu
                     </li>
-                    @if(!empty($organizations))
                     <li class="nav-item">
-                        <select id="orgChanger" class="form-control">
-                            @foreach($organization as $org)
-                                <option value="{{ $org->id }}">{{ $org->name }}</option>
-                            @endforeach
-                        </select>
+                        @include('partials.orgswitcher')
                     </li>
-                    @endif
                     <li class="nav-item">
                         <a href="{{ route('admin.home') }}" class="nav-link"><i class="fa fa-tachometer"></i> Dashboard</a>
                     </li>
@@ -79,14 +73,14 @@
                     <li class="nav-item nav-dropdown">
                         <a href="#" class="nav-link nav-dropdown-toggle"><i class="fa fa-newspaper-o"></i> Quizes</a>
                         <ul class="nav-dropdown-items">
+                            {{--<li class="nav-item">--}}
+                                {{--<a href="#" class="nav-link"><i class="fa fa-edit"></i>Manage</a>--}}
+                            {{--</li>--}}
                             <li class="nav-item">
-                                <a href="#" class="nav-link"><i class="fa fa-edit"></i>Manage</a>
+                                <a href="{{ route('admin.categories') }}" class="nav-link"><i class="fa fa-circle-o-notch"></i> Categories</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
-                            </li>
-                            <li class="lav-item">
-                                <a href="#" class="nav-link"><i class="fa fa-circle-o-notch"></i> Categories</a>
                             </li>
                         </ul>
                     </li>
