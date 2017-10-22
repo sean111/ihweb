@@ -28,7 +28,7 @@ function getDefaultOrg() {
     return \App\Models\Organization::find($domainId);
 }
 
-function setDefaultDomain(int $id) {
+function setDefaultOrg(int $id) {
     session(['defaultOrg' => $id]);
 }
 

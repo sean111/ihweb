@@ -18,14 +18,14 @@
                 <tbody>
                     @foreach($admins as $admin)
                         <tr>
-                            <th>{{ $admin->first_name }}</th>
-                            <th>{{ $admin->last_name }}</th>
-                            <th>{{ $admin->email }}</th>
-                            <th>{{ ucfirst($admin->role) }}</th>
-                            <th>
+                            <td>{{ $admin->first_name }}</td>
+                            <td>{{ $admin->last_name }}</td>
+                            <td>{{ $admin->email }}</td>
+                            <td>{{ ucfirst($admin->role) }}</td>
+                            <td>
                                 <a href="{{ route('admin.admins.edit', ['id' => $admin->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Danger</a>
-                            </th>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

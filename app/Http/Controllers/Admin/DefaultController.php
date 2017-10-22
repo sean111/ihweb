@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 class DefaultController extends Controller
 {
@@ -16,5 +17,10 @@ class DefaultController extends Controller
     {
         $this->addBreadcrumb('Test');
         return $this->view('admin.index');
+    }
+
+    public function changeOrg(int $org) {
+        setDefaultOrg($org);
+        return Redirect::back();
     }
 }

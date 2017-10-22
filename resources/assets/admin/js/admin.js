@@ -171,5 +171,5 @@ function init(url) {
 
 $('#defaultorg').on('change', () => {
     let value = $('#defaultorg :selected').val();
-    console.log(value);
+    window.location = '/admin/switch/' + value;
 });

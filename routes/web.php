@@ -20,6 +20,7 @@ Route::get('/logout', 'SecurityController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], function() {
     Route::get('/', 'Admin\DefaultController@index')->name('admin.home');
+    Route::get('switch/{org}', 'Admin\DefaultController@changeOrg')->name('admin.switch.org');
     //Users
     Route::get('/users', 'Admin\UsersController@index')->name('admin.users');
     Route::group(['prefix' => 'user'], function() {

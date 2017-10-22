@@ -10606,7 +10606,7 @@ function init(url) {
 
 $('#defaultorg').on('change', function () {
     var value = $('#defaultorg :selected').val();
-    console.log(value);
+    window.location = '/admin/switch/' + value;
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 

@@ -22,14 +22,18 @@
                     <label for="email" class="form-control-label">Email:</label>
                     <input type="text" id="email" name="email" class="form-control" value="{{  $admin->email ?? '' }}">
                 </div>
-                @if(count($orgs) == 1)
+                <div class="form-group">
+                    <label for="firebaseUid" class="form-control-label">Firebase UID:</label>
+                    <input type="text" id="firebaseUid" name="firebaseUid" class="form-control" value="{{  $admin->firebase_uid ?? '' }}">
+                </div>
+                @if(count($orgs) === 1)
                     <input type="hidden" name="org" value="{{ $orgs[0]->id }}">
                 @else
                     <div class="form-group">
                         <label for="Organization" class="form-control-label">Organization</label>
                         <select name="org" id="org" class="form-control">
                             @foreach($orgs as $org)
-                                <option value="{{$org->id}}">{{$org->name}}</option>
+                                <option value="{{$org->id}}" {{ ($org->id == $admin->organization_id) ? 'selected' : null }}>{{$org->name}}</option>
                             @endforeach
                         </select>
                     </div>
