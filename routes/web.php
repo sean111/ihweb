@@ -53,5 +53,6 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::get('edit/{id}', 'Admin\CategoriesController@edit')->name('admin.category.edit');
         Route::get('new', 'Admin\CategoriesController@edit')->name('admin.category.new');
         Route::post('save', 'Admin\CategoriesController@save')->name('admin.category.save');
+        Route::get('delete/{id}', 'Admin\CategoriesController@delete')->name('admin.category.delete');
     });
 });

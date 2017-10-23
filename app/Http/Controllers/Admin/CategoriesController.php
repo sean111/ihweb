@@ -73,6 +73,14 @@ class CategoriesController extends Controller
 
     public function delete(int $id)
     {
-
+        try {
+            $cat = Category::findOrFail($id);
+            $cat->delete();
+            setAlert('success', 'Category deleted');
+        } catch (\Throwable $e) {
+            Log::exception($e);
+            setAlert('error', 'There was an error deleting that category');
+        }
+        return redirect(route('admin.categories'));
     }
 }

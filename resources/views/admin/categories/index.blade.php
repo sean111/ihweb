@@ -25,7 +25,7 @@
                             <td>{{ $category->parent_id ? $category->parent->name : '&nbsp;' }}</td>
                             <td>
                                 <a href="{{ route('admin.category.edit', ['id' => $category->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
-                                <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
+                                <a href="{{ route('admin.category.delete', ['id' => $category->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
                             </td>
                         </tr>
                     @endforeach
