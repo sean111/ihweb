@@ -133,6 +133,45 @@ $(document).ready(function($){
         template: colorPickerTemplate
     });
 
+    $('.add-answer').on('click', () => {
+        $('#answer-inputs').append(`
+            <div class="input-group">
+                <input type='text' name='answer[]' class='form-control answer' />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-danger del-answer"><i class="fa fa-remove"></i></button>
+                </span>
+            </div>
+        `);
+    });
+
+    let dirtyAnswer = null;
+    $(document).on('blur', 'input.answer', function() {
+         //find old answer and update it in select
+        let newVal = $(this).val();
+        if (newVal.length > 1) {
+            if (dirtyAnswer.length > 0) {
+                //Update old value with new one
+                $(`#correct_answer option[value="${dirtyAnswer}"]`).val(newVal).html(newVal);
+            } else {
+                //Just append new value
+                $('#correct_answer').append(`<option value='${newVal}'>${newVal}</option>`);
+            }
+        }
+        console.log($(this).val());
+        console.log('Blur!');
+    }).on('focus', 'input.answer', function() {
+        dirtyAnswer = $(this).val();
+        console.log({dirty: dirtyAnswer});
+    });
+
+    $('body').on('click', '.del-answer', function() {
+        let iGroup = $(this).parent().parent();
+        let target = iGroup.find('.answer').val();
+        $(`#correct_answer option[value="${target}"]`).remove();
+        //Find the answer and delete it from the select
+        iGroup.remove();
+    });
+
 });
 
 /****

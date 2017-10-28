@@ -60,6 +60,7 @@ class CategoriesController extends Controller
 
             $category->name = $request->get('name');
             $category->description = $request->get('description');
+            $category->organization_id = getDefaultOrg()->id;
             $category->parent_id = $request->get('parent') > 0 ? $request->get('parent') : null;
             $category->save();
             setAlert('success', 'The category was saved successfully');

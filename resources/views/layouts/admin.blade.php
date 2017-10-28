@@ -65,7 +65,7 @@
                                 <a href="{{ route('admin.categories') }}" class="nav-link"><i class="fa fa-circle-o-notch"></i> Categories</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
+                                <a href="{{ route('admin.questions') }}" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
                             </li>
                         </ul>
                     </li>

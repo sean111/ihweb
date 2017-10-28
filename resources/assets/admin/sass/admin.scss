@@ -3,3 +3,14 @@
 @import '~simple-line-icons/scss/simple-line-icons';
 @import 'style';
 @import "~bootstrap-colorpicker/src/sass/colorpicker";
+
+.add-answer {
+  border: thin solid #1f2b3e;
+  background: #526d98;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  color: #fff;
+}

@@ -55,4 +55,12 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::post('save', 'Admin\CategoriesController@save')->name('admin.category.save');
         Route::get('delete/{id}', 'Admin\CategoriesController@delete')->name('admin.category.delete');
     });
+
+    Route::get('questions', 'Admin\QuestionController@index')->name('admin.questions');
+    Route::group(['prefix' => 'question'], function() {
+        Route::get('edit{id}', 'Admin\QuestionController@edit')->name('admin.question.edit');
+        Route::get('new', 'Admin\QuestionController@edit')->name('admin.question.new');
+        Route::post('save', 'Admin\QuestionController@save')->name('admin.question.save');
+        Route::get('delete/{id}', 'Admin\QuestionController@delete')->name('admin.question.delete');
+    });
 });

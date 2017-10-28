@@ -20,11 +20,13 @@ class CreateQuestionsTable extends Migration
             $table->integer('correct_answer');
             $table->string('correct_feedback');
             $table->string('incorrect_feedback');
-            $table->enum('difficulty', ['easy', 'medium', 'hard']);
+            $table->enum('difficulty', array_values(\App\Enums\Difficulty::toArray()));
             $table->string('resource');
             $table->enum('type', ['mc', 'yn']);
             $table->integer('organization_id')->unsigned()->nullable();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('SET NULL');
+            $table->integer('category_id')->unsigned()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
