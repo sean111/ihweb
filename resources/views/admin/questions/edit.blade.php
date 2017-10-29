@@ -23,7 +23,14 @@
                         }
                     ?>
                     @foreach( $answers as $answer)
-                        {{ var_dump($answer) }}
+                        <div id="answer-inputs">
+                            <div class="input-group">
+                                <input type="text" name="answer[]" class="form-control answer" value="{{ $answer }}">
+                                <span class="input-group-btn">
+                                <button type="button" class="btn btn-danger del-answer"><i class="fa fa-remove"></i></button>
+                            </span>
+                            </div>
+                        </div>
                     @endforeach
                     <div id="answer-inputs">
                         <div class="input-group">
