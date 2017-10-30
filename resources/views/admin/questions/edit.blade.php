@@ -52,11 +52,11 @@
                 </div>
                 <div class="form-group">
                     <label for="correct_feedback" class="form-control-label">Correct Feedback</label>
-                    <input type="text" class="form-control" name="correct_feedback">
+                    <input type="text" class="form-control" name="correct_feedback" value="{{ $question->correct_feedback ?? '' }}">
                 </div>
                 <div class="form-group">
                     <label for="incorrect_feedback" class="form-control-label">Incorrect Feedback</label>
-                    <input type="text" class="form-control" name="incorrect_feedback">
+                    <input type="text" class="form-control" name="incorrect_feedback" value="{{ $question->incorrect_feedback ?? '' }}">
                 </div>
                 <div class="form-group">
                     <label for="difficulty" class="form-control-label">Difficulty</label>
@@ -67,8 +67,16 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="categories" class="form-control-label">Categories</label>
+                    <select name="categories" id="categories" class="form-control" multiple>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ in_array($category->id, $questionCats) ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="resource" class="form-control-label">Resource</label>
-                    <input type="text" class="form-control" name="resource">
+                    <input type="text" class="form-control" name="resource" value="{{ $question->resource ?? '' }}">
                 </div>
                 <div class="form-group text-right">
                     <button class="btn btn-success">Save</button>

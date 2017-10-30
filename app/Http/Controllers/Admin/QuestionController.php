@@ -31,9 +31,10 @@ class QuestionController extends Controller
                 $question = new Question;
             }
             $difficulties = \App\Enums\Difficulty::toArray();
+            $questionCats = $question->categories->pluck('id')->toArray();
             //Get possible categories
             $categories = Category::where('organization_id', '=', getDefaultOrg()->id)->get();
-            return $this->view('admin.questions.edit', compact('question', 'id', 'categories', 'difficulties'));
+            return $this->view('admin.questions.edit', compact('question', 'id', 'categories', 'difficulties', 'questionCats'));
         } catch (\Throwable $e) {
             Log::exception($e);
             setAlert('error', 'There was an error when trying to edit or create the question');
@@ -45,7 +46,7 @@ class QuestionController extends Controller
     public function save(Request $request)
     {
         try {
-            $answer = $request->get('answer');
+            $answer = array_filter($request->get('answer'));
             $question = Question::findOrNew($request->get('id'));
             $question->question = $request->get('question');
             $question->answers = \serialize($answer);
@@ -56,6 +57,7 @@ class QuestionController extends Controller
             $question->resource = $request->get('resource');
             $question->organization_id = getDefaultOrg()->id;
             $question->save();
+            $question->categories()->sync($request->get('categories'));
             setAlert('success', 'Question saved');
         } catch (\Throwable $e) {
             Log::exception($e);
