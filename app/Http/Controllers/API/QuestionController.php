@@ -16,6 +16,9 @@ class QuestionController extends Controller
         $questions = Question::whereHas('categories', function($q) use ($catId) {
             $q->where('category_id', $catId);
         })->get();
+        foreach ($questions as &$question) {
+            $question->answers = \unserialize($question->answers);
+        }
         return $questions;
     }
 
