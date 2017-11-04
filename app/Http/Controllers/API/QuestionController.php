@@ -31,6 +31,7 @@ class QuestionController extends Controller
         $question = Question::whereHas('categories', function($q) use ($catId) {
             $q->where('category_id', $catId);
         })->inRandomOrder()->first();
+        $question->answers = \unserialize($question->answers);
         return $question;
     }
 
@@ -47,6 +48,9 @@ class QuestionController extends Controller
         if ($start) {
             $questions = $questions->offset($start);
         }
+        foreach ($questions as &$question) {
+            $question->answers = \unserialize($question->answers);
+        }
         return $questions->limit($count)->get();
     }
 
@@ -55,6 +59,9 @@ class QuestionController extends Controller
         $questions = Question::whereHas('categories', function($q) use ($catId) {
             $q->where('category_id', $catId);
         })->where('difficulty', '=', $diff)->get();
+        foreach ($questions as &$question) {
+            $question->answers = \unserialize($question->answers);
+        }
         return $questions;
     }
 }
