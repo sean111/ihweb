@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Group;
 
 class UsersController extends Controller
 {
@@ -33,7 +34,9 @@ class UsersController extends Controller
             $user = new User;
             $this->addBreadcrumb('New', null, 'plus');
         }
-        return $this->view('admin.users.edit', ['user' => $user, 'id' => $id]);
+        $org = getDefaultOrg();
+        $groups = Group::where('organization_id', '=', $org->id)->get();
+        return $this->view('admin.users.edit', compact('user', 'id', 'groups'));
     }
 
     public function save(Request $request)
@@ -44,6 +47,7 @@ class UsersController extends Controller
             $user->last_name = $request->get('last_name');
             $user->email = $request->get('email');
             $user->firebase_uid = $request->get('firebase_uid');
+            $user->group = $request->get('group');
             $user->save();
             setAlert('success', 'User has been saved');
         } catch (\Throwable $e) {

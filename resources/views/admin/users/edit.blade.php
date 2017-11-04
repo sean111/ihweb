@@ -27,6 +27,14 @@
                     <input type="text" class="form-control" name="firebase_uid" value="{{ $user->firebase_uid }}" required>
                 </div>
                 <div class="form-group">
+                    <label for="group" class="form-control-label">Group</label>
+                    <select name="group" id="group" class="form-control">
+                        @foreach($groups as $group)
+                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
                     <button class="btn btn-success"><i class="fa fa-save"></i> Save</button>
                 </div>
                 <input type="hidden" name="id" value="{{ $id }}">
