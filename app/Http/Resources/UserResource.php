@@ -19,6 +19,7 @@ class UserResource extends Resource
             'email' => $this->email,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
+            'group' => $this->group,
             'organization' => $this->organization
         ];
     }
