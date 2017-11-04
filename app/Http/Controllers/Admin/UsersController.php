@@ -18,7 +18,6 @@ class UsersController extends Controller
     public function index()
     {
         $org = getDefaultOrg();
-        \Debugbar::info($org);
         $this->addBreadcrumb('Users', null, 'users');
         $users = User::where('organization_id', '=', $org->id)->where('role', '=', 'user')->get();
         return $this->view('admin.users.index', ['users' => $users]);
@@ -42,12 +41,14 @@ class UsersController extends Controller
     public function save(Request $request)
     {
         try {
+            $org = getDefaultOrg();
             $user = User::findOrNew($request->get('id'));
             $user->first_name = $request->get('first_name');
             $user->last_name = $request->get('last_name');
             $user->email = $request->get('email');
             $user->firebase_uid = $request->get('firebase_uid');
-            $user->group = $request->get('group');
+            $user->group_id = $request->get('group');
+            $user->organization_id = $org->id;
             $user->save();
             setAlert('success', 'User has been saved');
         } catch (\Throwable $e) {
