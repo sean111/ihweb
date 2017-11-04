@@ -56,11 +56,21 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::get('delete/{id}', 'Admin\CategoriesController@delete')->name('admin.category.delete');
     });
 
+    //Questions
     Route::get('questions', 'Admin\QuestionController@index')->name('admin.questions');
     Route::group(['prefix' => 'question'], function() {
-        Route::get('edit{id}', 'Admin\QuestionController@edit')->name('admin.question.edit');
+        Route::get('edit/{id}', 'Admin\QuestionController@edit')->name('admin.question.edit');
         Route::get('new', 'Admin\QuestionController@edit')->name('admin.question.new');
         Route::post('save', 'Admin\QuestionController@save')->name('admin.question.save');
         Route::get('delete/{id}', 'Admin\QuestionController@delete')->name('admin.question.delete');
+    });
+
+    //Groups
+    Route::get('groups', 'Admin\GroupController@index')->name('admin.groups');
+    Route::group(['prefix' => 'group'], function() {
+        Route::get('edit/{id}', 'Admin\GroupController@edit')->name('admin.group.edit');
+        Route::get('new', 'Admin\GroupController@edit')->name('admin.group.new');
+        Route::post('save', 'Admin\GroupController@save')->name('admin.group.save');
+        Route::get('delete/{id}', 'Admin\GroupController@delete')->name('admin.group.delete');
     });
 });

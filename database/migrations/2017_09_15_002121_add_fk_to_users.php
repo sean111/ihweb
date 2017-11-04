@@ -15,6 +15,7 @@ class AddFkToUsers extends Migration
     {
         Schema::table('users', function($table) {
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('SET NULL');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('SET NULL');
         });
     }
 

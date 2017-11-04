@@ -35,4 +35,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
+
+    public function group()
+    {
+        return $this->belongsTo('App\Models\Group');
+    }
 }

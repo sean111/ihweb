@@ -17,4 +17,9 @@ class Group extends Model
     {
         return $this->hasMany(__CLASS__, 'parent_id', 'id');
     }
+
+    public function organization()
+    {
+        return $this->belongsTo('App\Models\Organization');
+    }
 }
