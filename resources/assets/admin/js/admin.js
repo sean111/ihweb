@@ -1,5 +1,6 @@
 require('bootstrap');
 require('bootstrap-colorpicker');
+import swal from 'sweetalert2'
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -211,4 +212,31 @@ function init(url) {
 $('#defaultorg').on('change', () => {
     let value = $('#defaultorg :selected').val();
     window.location = '/admin/switch/' + value;
+});
+
+$('.resource-rename').on('click', function() {
+   let id = $(this).data('id');
+   $('#file_id').val(id);
+   $('#resource-rename-modal').modal('show');
+});
+
+$('.resource-assign').on('click', function() {
+    let id = $(this).data('id');
+    $('#assign_file_id').val(id);
+    $('#resource-assign-modal').modal('show');
+});
+
+$('.resource-delete').on('click', function () {
+    let id = $(this).data('id');
+    swal({
+        title: 'Are you sure?',
+        text: 'This will permanently delete the resource',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+    }).then(function () {
+        window.location = '/admin/resource/delete/' + id;
+    }).catch(swal.noop);
 });

@@ -18,6 +18,7 @@ function getAlert()
 }
 
 function getDefaultOrg() {
+    //TODO: Add caching here
     $domainId = session('defaultOrg');
     if (empty($domainId)) {
         if (Auth::user()->organization_id !== null) {

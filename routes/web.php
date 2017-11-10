@@ -77,5 +77,8 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
     Route::get('resources', 'Admin\ResourceController@index')->name('admin.resources');
     Route::group(['prefix' => 'resource'], function() {
         Route::any('upload', 'Admin\ResourceController@upload')->name('admin.resource.upload');
+        Route::post('rename', 'Admin\ResourceController@rename')->name('admin.resource.rename');
+        Route::post('assign', 'Admin\ResourceController@assign')->name('admin.resource.assign');
+        Route::get('delete/{id}', 'Admin\ResourceController@delete')->name('admin.resource.delete');
     });
 });

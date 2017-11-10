@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Organization;
+use App\Models\Category;
 
 class Resource extends Model
 {
@@ -12,5 +13,10 @@ class Resource extends Model
     public function organization()
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
