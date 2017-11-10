@@ -15,7 +15,6 @@ class DefaultController extends Controller
 
     public function index()
     {
-        $this->addBreadcrumb('Test');
         return $this->view('admin.index');
     }
 

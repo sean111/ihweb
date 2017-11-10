@@ -53,6 +53,9 @@
                         <a href="{{ route('admin.groups') }}" class="nav-link"><i class="fa fa-times"></i> Groups</a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('admin.resources') }}" class="nav-link"><i class="fa fa-picture-o"></i> Resources</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('admin.users') }}" class="nav-link"><i class="fa fa-user"></i> Users</a>
                     </li>
                     <li class="nav-item">

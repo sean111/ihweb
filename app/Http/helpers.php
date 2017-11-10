@@ -39,3 +39,11 @@ function getOrgs()
     }
     return Auth::user()->organization();
 }
+
+function resourceLink(\App\Models\Resource $resource)
+{
+    if ($resource === null) {
+        return null;
+    }
+    return 'https://' . env('AWS_BUCKET') . '.' . env('AWS_URL') . '/' . $resource->path;
+}
