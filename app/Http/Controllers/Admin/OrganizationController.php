@@ -40,6 +40,15 @@ class OrganizationController extends Controller
             $org->primary_color = $request->get('primary_color');
             $org->secondary_color = $request->get('secondary_color');
             $org->tertiary_color = $request->get('tertiary_color');
+            if($request->hasFile('logo1')) {
+                $logo1 = $request->file('logo1')->store($org->id . '/resources', 's3');
+                $org->logo1 = $logo1;
+            }
+
+            if ($request->hasFile('logo2')) {
+                $logo2 = $request->file('logo2')->store($org->id . '/resources', 's3');
+                $org->logo2 = $logo2;
+            }
             $org->save();
             setAlert('success', 'Organization has been saved');
         } catch (\Throwable $e) {

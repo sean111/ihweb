@@ -11,7 +11,7 @@
             <div class="row">
             @foreach($files as $file)
                 <div class="card" style="width: 20rem">
-                    <img src="{{ resourceLink($file) }}" alt="" class="card-img-top img-fluid">
+                    <img src="{{ resourceLink($file->path) }}" alt="{{ $file->name }}" class="card-img-top img-fluid">
                     <div class="card-body">
                         <p class="card-text">
                             Name: {{ $file->name }}<br>
