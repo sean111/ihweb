@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+        <link rel="stylesheet" href="{{ route('admin.branding') }}" type="text/css" media="all">
     </head>
     <body class="app header-fixed sidebar-fixed">
     <header class="app-header navbar">
@@ -13,15 +14,15 @@
         <a class="navbar-brand" href="#"></a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">☰</button>
         <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item d-md-down-none">
-                <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">5</span></a>
-            </li>
-            <li class="nav-item d-md-down-none">
-                <a class="nav-link" href="#"><i class="icon-list"></i></a>
-            </li>
-            <li class="nav-item d-md-down-none">
-                <a class="nav-link" href="#"><i class="icon-location-pin"></i></a>
-            </li>
+            {{--<li class="nav-item d-md-down-none">--}}
+                {{--<a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">5</span></a>--}}
+            {{--</li>--}}
+            {{--<li class="nav-item d-md-down-none">--}}
+                {{--<a class="nav-link" href="#"><i class="icon-list"></i></a>--}}
+            {{--</li>--}}
+            {{--<li class="nav-item d-md-down-none">--}}
+                {{--<a class="nav-link" href="#"><i class="icon-location-pin"></i></a>--}}
+            {{--</li>--}}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                     <img src="https://robohash.org/{{ Auth::user()->email }}" class="img-avatar" alt="{{ Auth::user()->email }}">
