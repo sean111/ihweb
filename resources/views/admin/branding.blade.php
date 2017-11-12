@@ -18,3 +18,13 @@ header {
     background-color: {{ $organization->secondary_color }} !important;
 }
 @endif
+
+@if($organization->tertiary_color)
+.nav-link:hover {
+    background-color: {{ $organization->tertiary_color }} !important;
+}
+
+.nav-item:hover > .nav-link {
+    background-color: {{ $organization->tertiary_color }} !important;
+}
+@endif
