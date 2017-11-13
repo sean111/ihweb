@@ -24,6 +24,10 @@ header {
     background-color: {{ $organization->tertiary_color }} !important;
 }
 
+.nav-link.active {
+    background-color: {{ $organization->tertiary_color }} !important;
+}
+
 .nav-item:hover > .nav-link {
     background-color: {{ $organization->tertiary_color }} !important;
 }
