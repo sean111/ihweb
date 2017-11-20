@@ -39,4 +39,9 @@ class Category extends Model
     {
         return $this->belongsToMany('App\Models\Question')->withTimestamps();
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'category_id', 'id');
+    }
 }

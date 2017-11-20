@@ -18,8 +18,8 @@ class CreateOrganizationsTable extends Migration
             $table->string('name')->unique();
             $table->string('email');
             $table->string('domain');
-            $table->string('primary_color', 7);
-            $table->string('secondary_color', 7);
+            $table->string('primary_color', 7)->nullable();
+            $table->string('secondary_color', 7)->nullable();
             $table->string('tertiary_color', 7)->nullable();
             $table->string('logo1')->nullable();
             $table->string('logo2')->nullable();

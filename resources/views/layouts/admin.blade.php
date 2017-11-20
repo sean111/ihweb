@@ -74,6 +74,9 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.questions') }}" class="nav-link"><i class="fa fa-question-circle"></i> Questions</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.schedules') }}" class="nav-link"><i class="fa fa-calendar"></i> Schedules</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">

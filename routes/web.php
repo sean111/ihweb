@@ -82,4 +82,9 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::post('assign', 'Admin\ResourceController@assign')->name('admin.resource.assign');
         Route::get('delete/{id}', 'Admin\ResourceController@delete')->name('admin.resource.delete');
     });
+
+    Route::get('schedules', 'Admin\ScheduleController@index')->name('admin.schedules');
+    Route::group(['prefix' => 'schedule'], function() {
+
+    });
 });
