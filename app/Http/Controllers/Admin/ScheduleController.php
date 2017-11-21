@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Frequency;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Schedule;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Log;
 
 class ScheduleController extends Controller
 {
+    public $org;
     public function __construct()
     {
         $this->addBreadcrumb('Dashboard', 'admin.home', 'tachometer');
@@ -32,7 +36,20 @@ class ScheduleController extends Controller
 
     public function edit(int $id = 0)
     {
-
+        try {
+            $org = getDefaultOrg();
+            $event = Schedule::findOrNew($id);
+            $categories = Category::where('organization_id', '=', $org->id)->get();
+            clock()->debug($categories);
+            $frequencies = Frequency::toArray();
+            clock()->debug($frequencies);
+            return $this->view('admin.schedule.edit', compact('event', 'categories', 'id', 'frequencies'));
+        } catch (\Throwable $e) {
+            clock()->error($e->getMessage());
+            Log::exception($e);
+            setAlert('error', 'There was an error when trying to retrieve that schedule');
+            return redirect(route('admin.schedules'));
+        }
     }
 
     public function save(Request $request)

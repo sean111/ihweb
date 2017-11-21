@@ -10605,6 +10605,21 @@ $(document).ready(function ($) {
         //Find the answer and delete it from the select
         iGroup.remove();
     });
+
+    $('#frequency').change(function () {
+        var freq = $('#frequency :selected').val();
+        if (freq === 'once') {
+            $('.schedule-date').show();
+            $('.schedule-start').hide();
+            $('.schedule-end').hide();
+            $('.schedule-days').hide();
+        } else {
+            $('.schedule-date').hide();
+            $('.schedule-start').show();
+            $('.schedule-end').show();
+            $('.schedule-days').show();
+        }
+    });
 });
 
 /****

@@ -173,6 +173,21 @@ $(document).ready(function($){
         iGroup.remove();
     });
 
+    $('#frequency').change(function() {
+        let freq = $('#frequency :selected').val();
+        if (freq === 'once') {
+            $('.schedule-date').show();
+            $('.schedule-start').hide();
+            $('.schedule-end').hide();
+            $('.schedule-days').hide();
+        } else {
+            $('.schedule-date').hide();
+            $('.schedule-start').show();
+            $('.schedule-end').show();
+            $('.schedule-days').show();
+        }
+    });
+
 });
 
 /****

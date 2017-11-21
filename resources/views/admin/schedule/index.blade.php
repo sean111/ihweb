@@ -5,6 +5,9 @@
             Scheduled Questions
         </div>
         <div class="card-body">
+            <div class="pull-right" style="padding-bottom: 1em;">
+                <a href="{{ route('admin.schedule.new') }}" class="btn btn-sm"><i class="fa fa-plus"></i> Add</a>
+            </div>
             <table class="table table-hover table-striped">
                 <thead>
                     <tr>
