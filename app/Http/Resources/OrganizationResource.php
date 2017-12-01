@@ -22,8 +22,8 @@ class OrganizationResource extends Resource
             'primary_color' => $this->primary_color,
             'secondary_color' => $this->secondary_color,
             'tertiary_color' => $this->tertiary_color,
-            'logo1' => $this->logo1,
-            'logo2' => $this->logo2
+            'logo1' => 'https://' . env('AWS_BUCKET') . '.' . env('AWS_URL') . '/' . $this->logo1,
+            'logo2' => 'https://' . env('AWS_BUCKET') . '.' . env('AWS_URL') . '/' . $this->logo2
         ];
     }
 }

@@ -23,7 +23,7 @@ class OrganizationController extends Controller
             if (Auth::user()->organization_id === null) {
                 return response()->json(['success' => false], 500);
             }
-            return new OrganizationResource(Auth::user()->organization());
+            return new OrganizationResource(Auth::user()->organization);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
