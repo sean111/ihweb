@@ -88,5 +88,6 @@ Route::group(['middleware' => ['auth', 'is.admin'], 'prefix' => 'admin'], functi
         Route::get('edit/{id}', 'Admin\ScheduleController@edit')->name('admin.schedule.edit');
         Route::get('new', 'Admin\ScheduleController@edit')->name('admin.schedule.new');
         Route::post('save', 'Admin\ScheduleController@save')->name('admin.schedule.save');
+        Route::get('delete/{id}', 'Admin\ScheduleController@delete')->name('admin.schedule.delete');
     });
 });

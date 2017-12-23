@@ -10,4 +10,9 @@ class Schedule extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function getDaysAttribute($value)
+    {
+        return \unserialize($value);
+    }
 }

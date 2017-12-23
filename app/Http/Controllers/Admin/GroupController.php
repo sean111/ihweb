@@ -30,7 +30,7 @@ class GroupController extends Controller
         } else {
             $group = new Group;
         }
-        \Debugbar::info($group);
+        clock()->info($group);
         return $this->view('admin.groups.edit', compact('group', 'id'));
     }
 

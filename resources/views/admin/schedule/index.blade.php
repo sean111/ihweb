@@ -24,12 +24,19 @@
                     @foreach($events as $event)
                         <tr>
                             <td>{{ $event->category->name }}</td>
-                            <td>{{ $event->start }}</td>
-                            <td>{{ $event->end }}</td>
-                            <td>{{ $event->frequency }}</td>
-                            <td>{{ $event->days }}</td>
+                            <td>{{ date('m/d/Y', strtotime($event->start)) }}</td>
+                            <td>{{ date('m/d/Y', strtotime($event->end)) }}</td>
+                            <td>{{ $event->frequency }}</td >
+                            <td>
+                                @foreach($event->days as $index => $day)
+                                    {{ getDayFromInt($index) }}
+                                @endforeach
+                            </td>
                             <td>{{ $event->time }}</td>
-                            <td>&nbsp;</td>
+                            <td>
+                                <a href="{{ route('admin.schedule.edit', ['id' => $event->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                <a href="{{ route('admin.schedule.delete', ['id' => $event->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

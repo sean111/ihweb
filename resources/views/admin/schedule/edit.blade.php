@@ -11,7 +11,7 @@
                     <select name="category" id="category" class="form-control" required>
                         <option value=""></option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" {{ $category->id == $event->category_id ? "selected" : "" }}>{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -19,7 +19,7 @@
                     <label for="frequency" class="form-control-label">Frequency</label>
                     <select name="frequency" id="frequency" class="form-control">
                         @foreach($frequencies as $frequency)
-                            <option value="{{ $frequency }}">{{ ucwords($frequency, '-') }}</option>
+                            <option value="{{ $frequency }}" {{ $frequency == $event->frequency ? "selected" : ""}}>{{ ucwords($frequency, '-') }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,17 +33,17 @@
                 </div>
                 <div class="form-group schedule-end" style="display: none;">
                     <label for="end" class="form-control-label">End Date</label>
-                    <input type="date" name="end" id="end" class="form-control">
+                    <input type="date" name="end" id="end" class="form-control" value="{{ $event->end ?? "" }}">
                 </div>
                 <div class="form-group schedule-days" style="display: none;">
                     <label for="days" class="form-control-label">Days:</label>
-                    <input type="checkbox" name="day[0]" value=""> Monday
-                    <input type="checkbox" name="day[1]" value=""> Tuesday
-                    <input type="checkbox" name="day[2]" value=""> Wednesday
-                    <input type="checkbox" name="day[3]" value=""> Thursday
-                    <input type="checkbox" name="day[4]" value=""> Friday
-                    <input type="checkbox" name="day[5]" value=""> Saturday
-                    <input type="checkbox" name="day[6]" value=""> Sunday
+                    <input type="checkbox" name="day[0]" value="1"> Monday
+                    <input type="checkbox" name="day[1]" value="1"> Tuesday
+                    <input type="checkbox" name="day[2]" value="1"> Wednesday
+                    <input type="checkbox" name="day[3]" value="1"> Thursday
+                    <input type="checkbox" name="day[4]" value="1"> Friday
+                    <input type="checkbox" name="day[5]" value="1"> Saturday
+                    <input type="checkbox" name="day[6]" value="1"> Sunday
                 </div>
                 <div class="form-group">
                     <label for="time" class="form-control-label">Time</label>
@@ -55,7 +55,6 @@
                 </div>
                 <input type="hidden" name="id" value="{{ $id }}">
                 {{ csrf_field() }}
-
             </form>
         </div>
     </div>

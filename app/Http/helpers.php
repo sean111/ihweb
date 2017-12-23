@@ -74,3 +74,9 @@ function resourceLink(string $path)
     }
     return 'https://' . env('AWS_BUCKET') . '.' . env('AWS_URL') . '/' . $path;
 }
+
+function getDayFromInt(int $id)
+{
+    $days = [ 0 => 'Mon', 1 => 'Tue', 2 => 'Wed', 3 => 'Thr', 4 => 'Fri', 5 => 'Sat', 6 => 'Sun'];
+    return $days[$id];
+}

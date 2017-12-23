@@ -6,7 +6,6 @@ use App\Enums\Frequency;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Schedule;
-use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Log;
 
@@ -25,7 +24,8 @@ class ScheduleController extends Controller
     {
         try {
             $org = getDefaultOrg();
-            $events = Schedule::where('organization_id', '=', $org->id);
+            $events = Schedule::where('organization_id', '=', $org->id)->get();
+            clock()->debug($events);
             return $this->view('admin.schedule.index', ['events' => $events]);
         } catch (\Throwable $e) {
             Log::exception($e);
@@ -39,6 +39,7 @@ class ScheduleController extends Controller
         try {
             $org = getDefaultOrg();
             $event = Schedule::findOrNew($id);
+            clock()->debug($event);
             $categories = Category::where('organization_id', '=', $org->id)->get();
             clock()->debug($categories);
             $frequencies = Frequency::toArray();
@@ -54,11 +55,40 @@ class ScheduleController extends Controller
 
     public function save(Request $request)
     {
-
+        try {
+            $schedule = Schedule::findOrNew($request->get('id'));
+            $schedule->category_id = $request->get('category');
+            $frequency = $request->get('frequency');
+            $schedule->frequency = $frequency;
+            $schedule->organization_id = getDefaultOrg()->id;
+            if ($frequency === 'once') {
+                $schedule->start = $request->get('date');
+                $schedule->end = $request->get('date');
+            } else {
+                $schedule->start = $request->get('start');
+                $schedule->end = $request->get('end');
+                $schedule->days = \serialize($request->get('day'));
+            }
+            $schedule->time = $request->get('time');
+            $schedule->save();
+        } catch (\Throwable $e) {
+            clock()->error($e->getMessage());
+            Log::exception($e);
+            setAlert('error', 'There was an error when trying to save the schedule');
+        }
+        return redirect(route('admin.schedules'));
     }
 
     public function delete(int $id)
     {
-
+        try {
+            $schedule = Schedule::findOrFail($id);
+            $schedule->delete();
+        } catch (\Throwable $e) {
+            clock()->error($e->getMessage());
+            Log::exception($e);
+            setAlert('error', 'There was an error when trying to delete the schedule');
+        }
+        return redirect(route('admin.schedules'));
     }
 }

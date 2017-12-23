@@ -28,7 +28,7 @@ class AdminController extends Controller
             $admin = new User;
         }
         $orgs = getOrgs();
-        \Debugbar::info($orgs);
+        clock()->info($orgs);
         return $this->view('admin.admins.edit', ['admin' => $admin, 'orgs' => $orgs]);
     }
 
