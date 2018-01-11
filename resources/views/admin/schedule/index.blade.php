@@ -32,7 +32,7 @@
                                     {{ getDayFromInt($index) }}
                                 @endforeach
                             </td>
-                            <td>{{ $event->time }}</td>
+                            <td>{{ date('h:ia', strtotime($event->time)) }}</td>
                             <td>
                                 <a href="{{ route('admin.schedule.edit', ['id' => $event->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="{{ route('admin.schedule.delete', ['id' => $event->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>

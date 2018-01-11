@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth.firebase'], function() {
         Route::get('{orgId}/categories', 'API\OrganizationController@categoriesById')->name('api.org.categories.id');
         Route::get('/groups', 'API\OrganizationController@groups')->name('api.org.categories');
         Route::get('{orgId}/groups', 'API\OrganizationController@groupsById')->name('api.org.categories.id');
+        Route::post('/', 'API\OrganizationController@create')->name('api.organization.new');
+        Route::post('/{id}', 'API\OrganizationController@update')->name('api.organization.update');
     });
     Route::group(['prefix' => 'question'], function() {
         Route::get('{catId}', 'API\QuestionController@getAll')->name('api.question.all');

@@ -11,6 +11,7 @@ use App\Models\Organization;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OrganizationResource;
+use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
 {
@@ -119,6 +120,39 @@ class OrganizationController extends Controller
             return new CategoryResource($cats);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function create(Request $request)
+    {
+        if (!\in_array(Auth::user()->role, ['dev', 'admin'])) {
+            return response()->json(['succes' => false, 'message' => 'Access Denied'], 401);
+        }
+        try {
+            $data = json_decode($request->getContent(), true);
+            $validate = \Validator::make($data, [
+                'name' => 'required|string|unique:organizations,name',
+                'email' => 'required|email',
+                'domain' => 'required|string',
+                'primary_color' => 'string|min:6',
+                'secondary_color' => 'string|min:6',
+                'tertiary_color' => 'string|min:6'
+            ]);
+            if ($validate->fails()) {
+                return response()->json($validate->errors(), 500);
+            }
+            $organization = new Organization($data);
+            $organization->save();
+
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        if (!\in_array(Auth::user()->role, ['dev', 'admin'])) {
+            return response()->json(['succes' => false, 'message' => 'Access Denied'], 401);
         }
     }
 }
