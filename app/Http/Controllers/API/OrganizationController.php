@@ -123,6 +123,10 @@ class OrganizationController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(Request $request)
     {
         if (!\in_array(Auth::user()->role, ['dev', 'admin'])) {
@@ -143,16 +147,26 @@ class OrganizationController extends Controller
             }
             $organization = new Organization($data);
             $organization->save();
-
+            return response()->json(['success' => true, 'data' => $organization]);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function update(Request $request)
+    public function update(int $id, Request $request)
     {
         if (!\in_array(Auth::user()->role, ['dev', 'admin'])) {
             return response()->json(['succes' => false, 'message' => 'Access Denied'], 401);
         }
+        try {
+            $data = json_decode($request->getContent(), true);
+            $organization = Organization::findOrFail($id);
+            $organization->update($data);
+            $organization->save();
+            return response()->json(['success' => true, 'data' => $organization]);
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+
     }
 }
