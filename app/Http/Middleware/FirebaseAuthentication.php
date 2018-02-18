@@ -22,7 +22,6 @@ class FirebaseAuthentication
     {
         $errorMessage = 'Not authorized';
         $errorCode = 401;
-        $apiKey = 'AIzaSyAcakBCFW_yg7DIorj_Icgj056BLkVXtyM';
         try {
             $authToken = str_replace('Bearer', null, $request->headers->get('Authorization'));
             if ($authToken === null) {
@@ -30,7 +29,7 @@ class FirebaseAuthentication
             }
             Log::info('[Firebase Auth] => ' . $authToken);
             $serviceAccount = ServiceAccount::fromJsonFile(config_path() . '/firebase.json');
-            $firebase = (new Factory)->withServiceAccountAndApiKey($serviceAccount, $apiKey)->create();
+            $firebase = (new Factory)->withServiceAccount($serviceAccount)->create();
             $auth = $firebase->getAuth();
             $token = $auth->verifyIdToken($authToken);
             $userId = $token->getClaim('user_id');

@@ -167,6 +167,5 @@ class OrganizationController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
     }
 }
