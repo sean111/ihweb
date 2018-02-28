@@ -46,17 +46,16 @@ $(function() {
     $('#login').on('click', function () {
         let email = $('#email').val().trim();
         let password = $('#password').val().trim();
-        console.log({ 'email': email, 'password': password});
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(data => {
-                console.log(data.He);
-                axios.post('/check_login', {
-                    token: data.He
-                })
-                    .then(() => {
+                data.getIdToken().then(token => {
+                    console.log(token);
+                    axios.post('/check_login', {
+                        token: token
+                    }).then(() => {
                         window.location = '/';
-                    })
-                    .catch(error => { console.error(error); toastr.error(error.message); });
+                    }).catch(error => { console.error(error); toastr.error(error.message); });
+                });
             })
             .catch(error =>{ console.error({'code': error.code, 'message': error.message}); toastr.error(error.message); });
     });
