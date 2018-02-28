@@ -53,7 +53,7 @@ $(function() {
                     axios.post('/check_login', {
                         token: token
                     }).then(() => {
-                        window.location = '/';
+                        window.location = '/admin';
                     }).catch(error => { console.error(error); toastr.error(error.message); });
                 });
             })

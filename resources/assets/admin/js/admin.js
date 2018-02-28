@@ -9,13 +9,13 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-window.Vue = require('vue');
-import BootstrapVue from 'bootstrap-vue'
-Vue.use(BootstrapVue);
-
-const app = new Vue({
-    el: '#vue-app'
-});
+// window.Vue = require('vue');
+// import BootstrapVue from 'bootstrap-vue'
+// Vue.use(BootstrapVue);
+//
+// const app = new Vue({
+//     el: '#vue-app'
+// });
 
 /*****
  * CONFIGURATION

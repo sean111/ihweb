@@ -60891,7 +60891,7 @@ $(function () {
                 axios.post('/check_login', {
                     token: token
                 }).then(function () {
-                    window.location = '/';
+                    window.location = '/admin';
                 }).catch(function (error) {
                     console.error(error);toastr.error(error.message);
                 });
