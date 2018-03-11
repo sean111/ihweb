@@ -10,6 +10,13 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+let components = {
+    jquery: ['$', 'window.jQuery', 'jQuery'],
+    tether: ['Tether', 'window.Tether'],
+    'popper.js/dist/umd/popper.js': ['Popper']
+};
+mix.autoload(components)
+    .js('resources/assets/public/js/app.js', 'public/js')
+    .js('resources/assets/admin/js/admin.js', 'public/js')
+    .sass('resources/assets/public/sass/app.scss', 'public/css')
+    .sass('resources/assets/admin/sass/admin.scss', 'public/css');

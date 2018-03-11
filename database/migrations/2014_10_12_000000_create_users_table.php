@@ -15,9 +15,13 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email', 254)->unique();
+            $table->enum('role', ['user', 'admin', 'client_admin', 'dev'])->default('user');
+            $table->integer('organization_id')->unsigned()->nullable();
+            $table->string('firebase_uid', 254)->unique();
+            $table->integer('group_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
