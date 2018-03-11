@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{ $category->name }}</td>
                             <td>{{ $category->description }}</td>
-                            <td>{{ $category->parent_id ? $category->parent->name : '&nbsp;' }}</td>
+                            <td>{{ $category->parent_id ? $category->parent->name : '' }}</td>
                             <td>
                                 <a href="{{ route('admin.category.edit', ['id' => $category->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="{{ route('admin.category.delete', ['id' => $category->id]) }}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>

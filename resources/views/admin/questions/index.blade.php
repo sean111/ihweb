@@ -37,7 +37,11 @@
                             <td>{{ $question->incorrect_feedback }}</td>
                             <td>{{ $question->difficulty }}</td>
                             <td>{{ $question->resource }}</td>
-                            <td>{{ $question->category->name ?? '' }}</td>
+                            <td>
+                                @foreach($question->categories as $category)
+                                    {{ $category->name }}<br/>
+                                @endforeach
+                            </td>
                             <td>
                                 <a href="{{ route('admin.question.edit', ['id' => $question->id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</a>
                                 <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
