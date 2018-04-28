@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->integer('organization_id')->unsigned()->nullable();
             $table->string('firebase_uid', 254)->unique();
             $table->integer('group_id')->unsigned()->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

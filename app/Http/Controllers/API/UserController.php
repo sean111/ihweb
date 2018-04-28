@@ -57,4 +57,13 @@ class UserController extends Controller
         }
     }
 
+    public function deactivate()
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::user();
+        } catch (\Throwable $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

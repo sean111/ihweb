@@ -18,6 +18,7 @@ Route::group(['middleware' => 'auth.firebase'], function() {
         Route::get('/', 'API\UserController@index')->name('api.user');
         Route::get('/{userId}', 'API\UserController@get')->name('api.user.get');
         Route::post('update', 'API\UserController@update')->name('api.user.update');
+        Route::delete('/');
     });
     Route::group(['prefix' => 'organization'], function() {
         Route::get('/', 'API\OrganizationController@index')->name('api.organization');
