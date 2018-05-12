@@ -41,7 +41,8 @@ class SecurityController extends Controller
             $userId = $token->getClaim('user_id');
             Log::info('[Auth Login] => ' . $userId);
             $user = User::where('firebase_uid', $userId)->firstOrFail();
-            Auth::guard('web')->loginUsingId($user->id);
+            Log::info('[User Email] => ' . $user->email);
+            Auth::guard('web')->loginUsingId($user->id, true);
             return response()->json(['success' => true, 'data' => Auth::user()]);
         } catch (\Throwable $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 401);

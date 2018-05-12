@@ -39,6 +39,7 @@ class QuestionController extends Controller
      * @param int $catId
      * @param int $count
      * @param int $start
+     * @return Question[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
      */
     public function getRange(int $catId, int $count = 10, int $start = 0)
     {
