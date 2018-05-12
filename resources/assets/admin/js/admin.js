@@ -1,6 +1,8 @@
 require('bootstrap');
 require('bootstrap-colorpicker');
 import swal from 'sweetalert2'
+window.firebase = require('firebase');
+window.toastr = require('toastr');
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -9,13 +11,15 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-// window.Vue = require('vue');
-// import BootstrapVue from 'bootstrap-vue'
-// Vue.use(BootstrapVue);
-//
-// const app = new Vue({
-//     el: '#vue-app'
-// });
+
+firebase.initializeApp({
+    apiKey: "AIzaSyAcakBCFW_yg7DIorj_Icgj056BLkVXtyM",
+    authDomain: "insitehub-7c4a4.firebaseapp.com",
+    databaseURL: "https://insitehub-7c4a4.firebaseio.com",
+    projectId: "insitehub-7c4a4",
+    storageBucket: "insitehub-7c4a4.appspot.com",
+    messagingSenderId: "599946771340"
+});
 
 /*****
  * CONFIGURATION
@@ -254,4 +258,32 @@ $('.resource-delete').on('click', function () {
     }).then(function () {
         window.location = '/admin/resource/delete/' + id;
     }).catch(swal.noop);
+});
+
+toastr.options = {
+    "positionClass": "toast-top-full-width",
+    "preventDuplicates": true,
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
+
+$(function() {
+    $('#login').on('click', function () {
+        let email = $('#email').val().trim();
+        let password = $('#password').val().trim();
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(data => {
+                data.getIdToken().then(token => {
+                    console.log(token);
+                    axios.post('/check_login', {
+                        token: token
+                    }).then(() => {
+                        window.location = '/admin';
+                    }).catch(error => { console.error(error); toastr.error(error.message); });
+                });
+            })
+            .catch(error =>{ console.error({'code': error.code, 'message': error.message}); toastr.error(error.message); });
+    });
 });

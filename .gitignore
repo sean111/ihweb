@@ -13,4 +13,3 @@ yarn-error.log
 _ide_helper*
 .phpstorm.meta.php
 storage/debugbar
-config/firebase.json
